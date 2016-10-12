@@ -1,5 +1,7 @@
 package ru.rosreestr.persistence.model;
 
+import org.springframework.util.StringUtils;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -97,5 +99,34 @@ public class WebServiceConfig implements Serializable {
 
     public void setBooleanValue(Boolean booleanValue) {
         this.stringValue = booleanValue != null ? booleanValue.toString() : null;
+    }
+
+    @Transient
+    public WebServiceParamType readType() {
+
+        WebServiceParamType type;
+        if(!StringUtils.isEmpty(this.getStringValue())) {
+            type = WebServiceParamType.STRING;
+        } else if (this.getIntegerValue() != null) {
+            type = WebServiceParamType.INTEGER;
+        } else if (this.getDateValue() != null) {
+            type = WebServiceParamType.DATE;
+        } else {
+            type = null;
+        }
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return "WebServiceConfig{" +
+                "dateValue=" + dateValue +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", serviceId=" + serviceId +
+                ", stringValue='" + stringValue + '\'' +
+                ", integerValue=" + integerValue +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

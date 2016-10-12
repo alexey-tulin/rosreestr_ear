@@ -3,10 +3,15 @@ package ru.rosreestr.ws;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import ru.rosreestr.client.isur.model.*;
 import ru.rosreestr.client.isur.processor.ServiceImpl;
-import ru.rosreestr.config.AppProperties;
+import ru.rosreestr.exception.DuplicateWebServiceException;
+import ru.rosreestr.exception.NotFoundWebServiceException;
+import ru.rosreestr.persistence.model.*;
 import ru.rosreestr.persistence.repository.CommonRepositoryImpl;
+import ru.rosreestr.service.WebServiceConfigService;
+import ru.rosreestr.service.WebServiceService;
 import ru.rosreestr.utils.CommonUtils;
 import ru.rosreestr.utils.SignatureUtils;
 import ru.rosreestr.ws.model.GetInformationRequest;
@@ -14,6 +19,7 @@ import ru.rosreestr.ws.model.GetInformationResponse;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -22,11 +28,21 @@ import java.util.UUID;
 @Service("rosreestrServiceProcessor")
 public class RosreestrServiceProcessor {
     private static final Logger LOG = Logger.getLogger(RosreestrServiceProcessor.class);
+    private static final String FROM_ORG_CODE = "2033";
+    private static final String TO_ORG_CODE = "111";
+    private static final String SERVICE_NUMBER_TEMPLATE = "2033-9000085-047202-%s/%s";
+    private static final String SERVICE_TYPE_CODE = "047202";
+    private static final String DOCUMENT_TYPE_CODE = "77290";
+
+
     @Autowired
     private ServiceImpl serviceClient;
 
     @Autowired
-    private AppProperties properties;
+    private WebServiceConfigService wsParamsService;
+
+    @Autowired
+    private WebServiceService wsService;
 
     @Autowired
     CommonRepositoryImpl commonRepository;
@@ -35,7 +51,7 @@ public class RosreestrServiceProcessor {
         LOG.info("ru.rosreestr.ws.RosreestrServiceProcessor.sendRequest");
         BigDecimal nextMessageNum = commonRepository.getNextMessageNum();
         DecimalFormat df = new DecimalFormat("#000000");
-        String serviceNumber = String.format(properties.getRosreestrServiceNumberTemplate(),
+        String serviceNumber = String.format(SERVICE_NUMBER_TEMPLATE,
                 df.format(nextMessageNum), CommonUtils.getCurrentYear());
 
         serviceClient.sendTask(createTaskMessage(request, serviceNumber), createHeaders(serviceNumber));
@@ -46,8 +62,8 @@ public class RosreestrServiceProcessor {
 
     private Headers createHeaders(String serviceNumber) {
         Headers headers = new Headers();
-        headers.setFromOrgCode(properties.getRosreestrFromOrgCode());
-        headers.setToOrgCode(properties.getRosreestrToOrgCode());
+        headers.setFromOrgCode(FROM_ORG_CODE);
+        headers.setToOrgCode(TO_ORG_CODE);
         headers.setRequestDateTime(CommonUtils.getXmlGregorianCurrentDate());
         headers.setMessageId(UUID.randomUUID().toString());
         headers.setServiceNumber(serviceNumber);
@@ -69,7 +85,7 @@ public class RosreestrServiceProcessor {
         RequestTask requestTask = new RequestTask();
         requestTask.setRequestId(UUID.randomUUID().toString());
         requestTask.setServiceNumber(serviceNumber);
-        requestTask.setServiceTypeCode(properties.getRosreestrServiceTypeCode());
+        requestTask.setServiceTypeCode(SERVICE_TYPE_CODE);
 
         Person responsible = new Person();
         responsible.setLastName("Столыпин");
@@ -92,10 +108,10 @@ public class RosreestrServiceProcessor {
 
     private DocumentsRequestData createDocumentsRequestData(GetInformationRequest request) {
         DocumentsRequestData documentsRequestData = new DocumentsRequestData();
-        documentsRequestData.setDocumentTypeCode(properties.getRosreestrDocumentTypeCode());
+        documentsRequestData.setDocumentTypeCode(DOCUMENT_TYPE_CODE);
         documentsRequestData.setIncludeXmlView(true);
         documentsRequestData.setIncludeBinaryView(true);
-        documentsRequestData.setParameterTypeCode(properties.getRosreestrDocumentTypeCode());
+        documentsRequestData.setParameterTypeCode(DOCUMENT_TYPE_CODE);
         DocumentsRequestData.Parameter parameter = createParameter(request);
         documentsRequestData.setParameter(parameter);
         return documentsRequestData;
@@ -155,7 +171,18 @@ public class RosreestrServiceProcessor {
 
     private byte[] createSignature(byte[] data) {
         try {
-            return SignatureUtils.sign(data, properties.getSignatureAlias(), properties.getSignaturePassword().toCharArray());
+            WebServiceCode targetServiceCode = WebServiceCode.ISUR;
+            List<WebService> webServices = wsService.findByParam(WebServiceParam.CODE, targetServiceCode.name());
+
+            if (webServices.isEmpty()) {
+                throw new NotFoundWebServiceException(targetServiceCode);
+            } else if (webServices.size() > 1) {
+                throw new DuplicateWebServiceException(webServices, targetServiceCode);
+            }
+            WebServiceConfig aliasParam = wsParamsService.findOneByServiceIdAndName(webServices.get(0).getServiceId(), WebServiceParam.SIGNATURE_ALIAS, WebServiceParamType.STRING);
+            WebServiceConfig passwordParam = wsParamsService.findOneByServiceIdAndName(webServices.get(0).getServiceId(), WebServiceParam.SIGNATURE_PASSWORD);
+
+            return SignatureUtils.sign(data, aliasParam.getStringValue(), !StringUtils.isEmpty(passwordParam.getStringValue()) ? passwordParam.getStringValue().toCharArray() : null);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }

@@ -58,6 +58,8 @@ public class ServiceImpl {
 
     @PostConstruct
     protected void init() throws NotFoundWebServiceException, DuplicateWebServiceException, NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException {
+
+        // todo возможно имеет смысл по другому определять/хранить сервис, который вызываем
         List<WebService> webServices = wsService.findByParam(WebServiceParam.CODE, code.name());
 
         if (webServices.isEmpty()) {
@@ -68,14 +70,8 @@ public class ServiceImpl {
 
         Integer serviceId = webServices.get(0).getServiceId();
 
-        List<WebServiceConfig> wsdlParams = wsParamsService.findByServiceIdAndName(serviceId, WebServiceParam.WSDL);
-        if (wsdlParams.isEmpty()) {
-            throw new NotFoundWebServiceParamException(WebServiceParam.WSDL);
-        } else if (wsdlParams.size() > 1) {
-            throw new DuplicateWebServiceParamException(WebServiceParam.WSDL);
-        }
-
-        URL url = new URL(wsdlParams.get(0).getStringValue());
+        WebServiceConfig wsdlParam = wsParamsService.findOneByServiceIdAndName(serviceId, WebServiceParam.WSDL);
+        URL url = new URL(wsdlParam.getStringValue());
 
         List<WebServiceConfig> loggingEnableParams = wsParamsService.findByServiceIdAndName(serviceId, WebServiceParam.LOGGING_ENABLE);
         IsurSignatureHandler isurSignatureHandler = applicationContext.getBean(IsurSignatureHandler.class);

@@ -16,7 +16,7 @@ public class RosreestrStart {
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class, PersistentConfig.class);//, PersistentConfig.class);
 
         AppProperties properties = context.getBean(AppProperties.class);
-        System.out.println(properties.getIsur());
+        //System.out.println(properties.getIsur());
         ServiceImpl processor = context.getBean(ServiceImpl.class);
 //        processor.sendTask();
 
