@@ -1,0 +1,9 @@
+
+INSERT INTO "WS"."WS_SERVICES" (SERVICE_ID, NAME) VALUES (99, 'ISUR');
+
+INSERT INTO "WS"."WS_CONFIG" (NAME_PARAM, SERVICE_ID, VAL_STRING, DESCRIPTION) VALUES ('WSDL', 99, 'http://212.45.30.233:81/IsurTest/Coordinate/V5/Service.svc?singleWsdl', 'Адрес сервиса');
+
+INSERT INTO "WS"."WS_CONFIG" (NAME_PARAM, SERVICE_ID, VAL_STRING, DESCRIPTION) VALUES ('CODE', 99, 'ISUR', 'Уникальный код сервиса');
+
+INSERT INTO "WS"."WS_CONFIG" (NAME_PARAM, SERVICE_ID, VAL_STRING, DESCRIPTION) VALUES ('LOGGING_ENABLE', 99, 'true', 'Логирование входящих и исходящих запросов включено');
+

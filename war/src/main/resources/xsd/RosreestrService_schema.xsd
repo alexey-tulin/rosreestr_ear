@@ -1,0 +1,229 @@
+<xs:schema version="1.0" attributeFormDefault="unqualified"
+           elementFormDefault="qualified" targetNamespace="http://aisercu.rosreestr.ru/"
+           xmlns="http://aisercu.rosreestr.ru/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="GetInformationRequest">
+        <xs:annotation>
+            <xs:documentation xml:lang="ru">ДОК: РОСРЕЕСТР новый Права на объект</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="typeobject" minOccurs="1" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип объекта недвижимости</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="iddbegrp" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Идентификатор в базе данных ЕГПР</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cadastralnumber" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Кадастровый номер</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="areasvalue" minOccurs="0" type="xs:decimal">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Основная площадь и другие площади Значение площади
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="areasunit" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Основная площадь и другие площади Единица измерени
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="dopinfoname" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Наименование объекта</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="typebuilding" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип здания</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="conditionalcadatralnumber" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Условный номер</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="typeroom" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип помещения</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <!-- Блок адреса -->
+                <xs:element name="region" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Регион</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="codeokato" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Код ОКАТО</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="codekladr" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Код КЛАДР</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="postalcode" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Почтовый индекс</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="locationdistrict" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Район</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="typedistrict" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип района</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="town" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Муниципальное образование (например, Город)</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="typetown" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип муниципального образования</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="rayon" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Городской район</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="typerayon" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип городского район</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="locationsoviet" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Сельсовет</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="typesoviet" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип сельсовета</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="naselpunkt" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Населенный пункт</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="typenaselpunkt" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип населенного пункта</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="locationstreet" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Улица</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="typestreet" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип улицы</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="locationhouse" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Дом</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="address1" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип дома</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="locationbuilding" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Корпус</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="address2" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип корпуса</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="locationstructure" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Строение</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="address3" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип строения</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="locationapartment" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Квартира</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="apartment" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Тип квартиры</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="adressother" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Иное (Адрес)</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="locationother" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Неформальное описание</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="email_subscription" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Электронная почта</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="enable_subscription" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Подписка по запросу</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                            <xs:enumeration value="1">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Включить подписку</xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                            <xs:enumeration value="2">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="ru">Выключить подписку</xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="kind_name" minOccurs="0" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="ru">Описание типа объекта недвижимости</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="GetInformationResponse">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="serviceNumber" minOccurs="1" type="xs:string">
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

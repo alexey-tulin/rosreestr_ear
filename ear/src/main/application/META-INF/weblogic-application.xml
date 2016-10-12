@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-application xmlns="http://xmlns.oracle.com/weblogic/weblogic-application”
+xmlns:xsi=”http://www.w3.org/2001/XMLSchema-instance 
+xsi:schemaLocation=”http://xmlns.oracle.com/weblogic/weblogic-application 
+http://xmlns.oracle.com/weblogic/weblogic-application/1.0/weblogic-application.xsd">
+        <application-param>
+                <param-name>webapp.encoding.default</param-name>
+                <param-value>UTF-8</param-value>
+        </application-param>
+
+        <prefer-application-packages>
+                <package-name>org.hibernate.*</package-name>
+                <package-name>javax.persistence.*</package-name>
+                <package-name>javassist</package-name>
+                <package-name>com.sun.xml.ws.api.wsdl.parser.*</package-name>
+        </prefer-application-packages>
+        <prefer-application-resources>
+                <resource-name>org.hibernate.*</resource-name>
+                <resource-name>javax.persistence.*</resource-name>
+                <resource-name>javassist</resource-name>
+                <resource-name>META-INF/services/javax.xml.ws.*</resource-name>
+                <resource-name>META-INF/services/com.sun.xml.ws.*</resource-name>
+                <resource-name>META-INF/services/com.sun.tools.ws.*</resource-name>
+        </prefer-application-resources>
+
+</weblogic-application>

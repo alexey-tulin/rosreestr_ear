@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:ws="http://jax-ws.dev.java.net/spring/core"
+       xmlns:wss="http://jax-ws.dev.java.net/spring/servlet"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://jax-ws.dev.java.net/spring/core
+       http://jax-ws.java.net/spring/core.xsd
+       http://jax-ws.dev.java.net/spring/servlet
+       http://jax-ws.java.net/spring/servlet.xsd">
+
+    <wss:binding url="/isurtestws">
+        <wss:service>
+            <ws:service bean="#isurtestws"/>
+        </wss:service>
+    </wss:binding>
+
+    <wss:binding url="/rosreestrws">
+        <wss:service>
+            <ws:service bean="#rosreestrws"/>
+        </wss:service>
+    </wss:binding>
+
+    <bean id="isurtestws" class="ru.rosreestr.ws.IsurServiceImpl"/>
+    <bean id="rosreestrws" class="ru.rosreestr.ws.RosreestrServiceImpl"/>
+
+</beans>
