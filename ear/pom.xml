@@ -61,7 +61,6 @@
                         <webModule>
                             <groupId>rosreestr</groupId>
                             <artifactId>rosreestr-presale-war</artifactId>
-                            <contextRoot>rosreestr-presale2</contextRoot>
                         </webModule>
                     </modules>
                 </configuration>
