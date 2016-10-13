@@ -27,6 +27,6 @@ public class WebServiceConfigServiceTest extends TestCase {
 
     @Test
     public void testFindOneByServiceIdAndName() throws Exception {
-        System.out.println("----" + wsParamsService.findByServiceIdAndNameParam(89, WebServiceParam.CODE));
+        System.out.println("----" + wsParamsService.findByServiceIdAndNameParam(89, WebServiceParam.SIGNATURE_ALIAS));
     }
 }

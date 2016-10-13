@@ -109,6 +109,7 @@ public class ServiceClient extends Service {
     public void configureLogger(Integer serviceId, boolean logXmlEnable) {
         loggerHandler.setServiceId(serviceId);
         loggerHandler.setIsLogXmlEnable(logXmlEnable);
+        signatureHandler.setServiceId(serviceId);
     }
 
     public void setSignatureHandler(SignatureHandler signatureHandler) {

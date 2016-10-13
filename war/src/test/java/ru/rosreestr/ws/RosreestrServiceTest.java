@@ -25,7 +25,7 @@ public class RosreestrServiceTest {
 
     @Qualifier("rosreestrservice")
     @Autowired
-    private RosreestrServiceImpl rosreestrService;
+    private RosreestrService rosreestrService;
 
     @Test
     public void testGetInformation() throws Exception {
