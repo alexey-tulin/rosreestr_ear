@@ -24,16 +24,16 @@ public class WebServiceConfigServiceImpl implements WebServiceConfigService {
 
     @Override
     public List<WebServiceConfig> findByServiceIdAndName(Integer serviceId, String name) {
-        return configRepository.findByServiceIdAndName(serviceId, name);
+        return configRepository.findByServiceIdAndNameParam(serviceId, name);
     }
 
     @Override
     public WebServiceConfig findOneByServiceIdAndName(Integer serviceId, String name) throws NotFoundWebServiceParamException, DuplicateWebServiceParamException {
-        List<WebServiceConfig> params = configRepository.findByServiceIdAndName(serviceId, name);
+        List<WebServiceConfig> params = configRepository.findByServiceIdAndNameParam(serviceId, name);
         if (params.isEmpty()) {
-            throw new NotFoundWebServiceParamException(WebServiceParam.WSDL);
+            throw new NotFoundWebServiceParamException(name);
         } else if (params.size() > 1) {
-            throw new DuplicateWebServiceParamException(WebServiceParam.WSDL);
+            throw new DuplicateWebServiceParamException(name);
         }
         return params.get(0);
     }
