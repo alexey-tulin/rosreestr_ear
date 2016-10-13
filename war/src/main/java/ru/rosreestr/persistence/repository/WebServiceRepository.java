@@ -13,13 +13,13 @@ import java.util.List;
  */
 public interface WebServiceRepository extends JpaRepository<WebService, Long> {
 
-    @Query("select ws from WebService ws inner join ws.params p where p.name = :paramName and p.stringValue = :paramValue")
+    @Query("select ws from WebService ws inner join ws.params p where p.nameParam = :paramName and p.stringValue = :paramValue")
     List<WebService> findByParam(@Param("paramName") String paramName, @Param("paramValue") String paramValue);
 
-    @Query("select ws from WebService ws inner join ws.params p where p.name = :paramName and p.integerValue = :paramValue")
+    @Query("select ws from WebService ws inner join ws.params p where p.nameParam = :paramName and p.integerValue = :paramValue")
     List<WebService> findByParam(@Param("paramName") String paramName, @Param("paramValue") Integer paramValue);
 
-    @Query("select ws from WebService ws inner join ws.params p where p.name = :paramName and p.dateValue = :paramValue")
+    @Query("select ws from WebService ws inner join ws.params p where p.nameParam = :paramName and p.dateValue = :paramValue")
     List<WebService> findByParam(@Param("paramName") String paramName, @Param("paramValue") Date paramValue);
 
 }
