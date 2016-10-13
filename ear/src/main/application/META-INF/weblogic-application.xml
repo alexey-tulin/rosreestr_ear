@@ -21,6 +21,7 @@ http://xmlns.oracle.com/weblogic/weblogic-application/1.0/weblogic-application.x
                 <resource-name>META-INF/services/javax.xml.ws.*</resource-name>
                 <resource-name>META-INF/services/com.sun.xml.ws.*</resource-name>
                 <resource-name>META-INF/services/com.sun.tools.ws.*</resource-name>
+                <resource-name>META-INF/services/javax.xml.bind.JAXBContext</resource-name>
         </prefer-application-resources>
 
 </weblogic-application>
