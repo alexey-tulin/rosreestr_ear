@@ -1,7 +1,7 @@
 
 INSERT INTO "WS"."WS_SERVICES" (SERVICE_ID, NAME) VALUES (89, 'ISUR_PROXY');
 
-INSERT INTO "WS"."WS_CONFIG" (NAME_PARAM, SERVICE_ID, VAL_STRING, DESCRIPTION) VALUES ('WSDL', 89, 'http://212.45.30.233:81/IsurTest/Coordinate/V5/Service.svc?singleWsdl', 'Адрес сервиса');
+--INSERT INTO "WS"."WS_CONFIG" (NAME_PARAM, SERVICE_ID, VAL_STRING, DESCRIPTION) VALUES ('WSDL', 89, 'http://212.45.30.233:81/IsurTest/Coordinate/V5/Service.svc?singleWsdl', 'Адрес сервиса');
 
 INSERT INTO "WS"."WS_CONFIG" (NAME_PARAM, SERVICE_ID, VAL_STRING, DESCRIPTION) VALUES ('CODE', 89, 'ISUR_PROXY', 'Уникальный код сервиса');
 
