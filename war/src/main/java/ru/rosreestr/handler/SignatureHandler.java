@@ -1,4 +1,4 @@
-package ru.rosreestr.client.isur.handler;
+package ru.rosreestr.handler;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -23,9 +23,9 @@ import java.util.Set;
 
 @Component
 @Scope("prototype")
-public class IsurSignatureHandler implements SOAPHandler<SOAPMessageContext> { //extends SpringBeanAutowiringSupport
+public class SignatureHandler implements SOAPHandler<SOAPMessageContext> { //extends SpringBeanAutowiringSupport
 
-    private static final Logger LOGGER = Logger.getLogger(IsurSignatureHandler.class);
+    private static final Logger LOGGER = Logger.getLogger(SignatureHandler.class);
 
     @Resource
     private WebServiceConfigService configService;

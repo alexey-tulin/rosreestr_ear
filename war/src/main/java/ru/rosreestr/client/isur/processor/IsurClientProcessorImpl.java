@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import ru.rosreestr.client.isur.IService;
 import ru.rosreestr.client.isur.ServiceClient;
-import ru.rosreestr.client.isur.handler.IsurSignatureHandler;
 import ru.rosreestr.client.isur.model.CoordinateTaskData;
 import ru.rosreestr.client.isur.model.Headers;
 import ru.rosreestr.exception.DuplicateWebServiceException;
@@ -13,6 +12,7 @@ import ru.rosreestr.exception.DuplicateWebServiceParamException;
 import ru.rosreestr.exception.NotFoundWebServiceException;
 import ru.rosreestr.exception.NotFoundWebServiceParamException;
 import ru.rosreestr.handler.LoggerHandler;
+import ru.rosreestr.handler.SignatureHandler;
 import ru.rosreestr.persistence.model.WebService;
 import ru.rosreestr.persistence.model.WebServiceCode;
 import ru.rosreestr.persistence.model.WebServiceConfig;
@@ -31,9 +31,13 @@ import java.util.List;
  * Client for invoking {@link IService}
  */
 @org.springframework.stereotype.Service
-public class ServiceImpl {
-    private static final Logger LOG = Logger.getLogger(ServiceImpl.class);
-    private static final WebServiceCode code = WebServiceCode.ISUR;
+public class IsurClientProcessorImpl implements IsurClientProcessor {
+
+    private static final Logger LOG = Logger.getLogger(IsurClientProcessorImpl.class);
+
+    public static final WebServiceCode CODE = WebServiceCode.ISUR;
+
+    private Integer serviceId;
 
     private ServiceClient serviceClient;
 
@@ -46,9 +50,16 @@ public class ServiceImpl {
     @Autowired
     ApplicationContext applicationContext;
 
+    @Autowired
+    SignatureHandler signatureHandler;
+
+    @Autowired
+    LoggerHandler loggerHandler;
+
     /**
      * Method for invoking {@link IService#sendTask} service
      */
+    @Override
     public void sendTask(CoordinateTaskData taskMessage, Headers serviceHeader) {
         LOG.info("start service sendTask");
         IService customBindingIService = serviceClient.getCustomBindingIService();
@@ -59,28 +70,23 @@ public class ServiceImpl {
     @PostConstruct
     protected void init() throws NotFoundWebServiceException, DuplicateWebServiceException, NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException {
 
-        // todo возможно имеет смысл по другому определять/хранить сервис, который вызываем
-        List<WebService> webServices = wsService.findByParam(WebServiceParam.CODE, code.name());
-
-        if (webServices.isEmpty()) {
-            throw new NotFoundWebServiceException(code);
-        } else if (webServices.size() > 1) {
-            throw new DuplicateWebServiceException(webServices, code);
-        }
-
-        Integer serviceId = webServices.get(0).getServiceId();
+        WebService webService = wsService.findByCode(CODE);
+        serviceId = webService.getServiceId();
 
         WebServiceConfig wsdlParam = wsParamsService.findOneByServiceIdAndName(serviceId, WebServiceParam.WSDL);
         URL url = new URL(wsdlParam.getStringValue());
 
         List<WebServiceConfig> loggingEnableParams = wsParamsService.findByServiceIdAndName(serviceId, WebServiceParam.LOGGING_ENABLE);
-        IsurSignatureHandler isurSignatureHandler = applicationContext.getBean(IsurSignatureHandler.class);
-        LoggerHandler loggerHandler = applicationContext.getBean(LoggerHandler.class);
 
         serviceClient = new ServiceClient(url);
         serviceClient.setLoggerHandler(loggerHandler);
-        serviceClient.setSignatureHandler(isurSignatureHandler);
+        serviceClient.setSignatureHandler(signatureHandler);
         serviceClient.configureLogger(serviceId, !loggingEnableParams.isEmpty() &&
                 Boolean.TRUE.equals(loggingEnableParams.get(0).getBooleanValue()));
+    }
+
+    @Override
+    public Integer getServiceId() {
+        return serviceId;
     }
 }

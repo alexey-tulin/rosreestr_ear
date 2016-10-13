@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
-import ru.rosreestr.client.isur.processor.ServiceImpl;
+import ru.rosreestr.client.isur.processor.IsurClientProcessorImpl;
 import ru.rosreestr.config.AppConfig;
 import ru.rosreestr.ws.model.GetInformationRequest;
 import ru.rosreestr.ws.model.GetInformationResponse;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Tatiana Chukina on 10.10.2016 2:48.
@@ -23,7 +21,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class})
 public class RosreestrServiceTest {
-    private static final Logger LOG = Logger.getLogger(ServiceImpl.class);
+    private static final Logger LOG = Logger.getLogger(IsurClientProcessorImpl.class);
 
     @Qualifier("rosreestrservice")
     @Autowired

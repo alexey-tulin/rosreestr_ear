@@ -1,6 +1,9 @@
 package ru.rosreestr.service;
 
+import ru.rosreestr.exception.DuplicateWebServiceException;
+import ru.rosreestr.exception.NotFoundWebServiceException;
 import ru.rosreestr.persistence.model.WebService;
+import ru.rosreestr.persistence.model.WebServiceCode;
 
 import java.util.Date;
 import java.util.List;
@@ -19,4 +22,6 @@ public interface WebServiceService {
     List<WebService> findByParam(String paramName, Integer paramValue);
 
     List<WebService> findByParam(String paramName, Date paramValue);
+
+    WebService findByCode(WebServiceCode code) throws NotFoundWebServiceException, DuplicateWebServiceException;
 }

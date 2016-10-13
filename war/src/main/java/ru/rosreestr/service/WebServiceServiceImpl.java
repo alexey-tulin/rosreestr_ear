@@ -2,7 +2,11 @@ package ru.rosreestr.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.rosreestr.exception.DuplicateWebServiceException;
+import ru.rosreestr.exception.NotFoundWebServiceException;
 import ru.rosreestr.persistence.model.WebService;
+import ru.rosreestr.persistence.model.WebServiceCode;
+import ru.rosreestr.persistence.model.WebServiceParam;
 import ru.rosreestr.persistence.repository.WebServiceRepository;
 
 import javax.annotation.Resource;
@@ -46,5 +50,23 @@ public class WebServiceServiceImpl implements WebServiceService {
     @Transactional(readOnly = true)
     public List<WebService> findByParam(String paramName,String paramValue) {
         return webServiceRepository.findByParam(paramName, paramValue);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public WebService findByCode(WebServiceCode code) throws NotFoundWebServiceException, DuplicateWebServiceException {
+
+        if (code == null)
+            throw new NotFoundWebServiceException(code);
+
+        List<WebService> webServices = findByParam(WebServiceParam.CODE, code.name());
+
+        if (webServices.isEmpty()) {
+            throw new NotFoundWebServiceException(code);
+        } else if (webServices.size() > 1) {
+            throw new DuplicateWebServiceException(webServices, code);
+        }
+
+        return webServices.get(0);
     }
 }

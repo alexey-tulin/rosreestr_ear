@@ -25,7 +25,7 @@ public interface RosreestrService {
     @WebResult(name = "GetInformationResponse", targetNamespace = "http://aisercu.rosreestr.ru/")
     @RequestWrapper(localName = "GetInformation", targetNamespace = "http://aisercu.rosreestr.ru/")
     @ResponseWrapper(localName = "GetInformationResponse", targetNamespace = "http://aisercu.rosreestr.ru/")
-    public GetInformationResponse getInformation(
+    GetInformationResponse getInformation(
             @WebParam(name = "request", targetNamespace = "http://aisercu.rosreestr.ru/")
             GetInformationRequest request);
 }

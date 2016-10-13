@@ -8,6 +8,6 @@ import ru.rosreestr.persistence.model.WebServiceCode;
 public class NotFoundWebServiceException extends  Exception {
 
     public NotFoundWebServiceException(WebServiceCode code) {
-        super("Not found WebService code=" + code.name());
+        super("Not found WebService code=" + (code == null ? "null" : code.name()));
     }
 }

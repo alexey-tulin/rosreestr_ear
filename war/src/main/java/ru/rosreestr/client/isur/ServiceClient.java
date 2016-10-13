@@ -1,8 +1,8 @@
 
 package ru.rosreestr.client.isur;
 
-import ru.rosreestr.client.isur.handler.IsurSignatureHandler;
 import ru.rosreestr.handler.LoggerHandler;
+import ru.rosreestr.handler.SignatureHandler;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.*;
@@ -38,7 +38,7 @@ public class ServiceClient extends Service {
         SERVICE_EXCEPTION = e;
     }
 
-    private IsurSignatureHandler signatureHandler;
+    private SignatureHandler signatureHandler;
 
     private LoggerHandler loggerHandler;
 
@@ -111,7 +111,7 @@ public class ServiceClient extends Service {
         loggerHandler.setIsLogXmlEnable(logXmlEnable);
     }
 
-    public void setSignatureHandler(IsurSignatureHandler signatureHandler) {
+    public void setSignatureHandler(SignatureHandler signatureHandler) {
         this.signatureHandler = signatureHandler;
     }
 

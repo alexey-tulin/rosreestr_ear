@@ -24,12 +24,13 @@ import java.util.UUID;
 /**
  * Created by Tatiana Chukina on 09.10.2016 23:40.
  * <p/>
- * Test to {@link ServiceImpl}
+ * Test to {@link IsurClientProcessorImpl}
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class})
 public class ServiceImplTest {
-    private static final Logger LOG = Logger.getLogger(ServiceImpl.class);
+    private static final Logger LOG = Logger.getLogger(IsurClientProcessorImpl.class);
+
     private static final String FROM_ORG_CODE = "2033";
     private static final String TO_ORG_CODE = "111";
     private static final String SERVICE_NUMBER_TEMPLATE = "2033-9000085-047202-%s/%s";
@@ -37,7 +38,7 @@ public class ServiceImplTest {
     private static final String DOCUMENT_TYPE_CODE = "77290";
 
     @Autowired
-    private ServiceImpl serviceClient;
+    private IsurClientProcessorImpl serviceClient;
 
     @Autowired
     private AppProperties properties;
