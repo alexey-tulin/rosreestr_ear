@@ -1,22 +1,16 @@
 package ru.rosreestr.ws;
 
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
 import ru.rosreestr.client.isur.model.CoordinateStatusData;
 import ru.rosreestr.client.isur.model.ErrorMessage;
 
 /**
- * Created by Tatiana Chukina on 01.10.2016 16:43.
+ * Created by KatrinaBosh on 13.10.2016.
  */
-@Service("serviceWSProcessor")
-public class IsurServiceProcessor {
-    private static final Logger LOG = Logger.getLogger(IsurServiceProcessor.class);
+public interface IsurServiceProcessor {
 
-    public void acknowledgement(ErrorMessage parameters) {
-        LOG.info("ru.rosreestr.endpoints.ServiceWSProcessor.acknowledgement");
-    }
+    void acknowledgement(ErrorMessage parameters);
 
-    public void setFilesAndStatus(CoordinateStatusData statusMessage) {
-        LOG.info("ru.rosreestr.endpoints.ServiceWSProcessor.setFilesAndStatus");
-    }
+    void setFilesAndStatus(CoordinateStatusData statusMessage);
+
+    Integer getServiceId();
 }
