@@ -10,4 +10,5 @@ public class WebServiceParam {
     public static final String LOGGING_ENABLE = "LOGGING_ENABLE";
     public static final String SIGNATURE_ALIAS = "SIGNATURE_ALIAS";
     public static final String SIGNATURE_PASSWORD = "SIGNATURE_PASSWORD";
+    public static final String SIGNATURE_ELEMENTS = "SIGNATURE_ELEMENTS";
 }

@@ -5,6 +5,7 @@ import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.token.X509Security;
 import org.apache.xml.security.transforms.Transforms;
 import org.apache.xpath.XPathAPI;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -44,36 +45,65 @@ public class SignatureUtils {
 
     public static final String ALGORITHM_NAME = "GOST3411withGOST3410EL";
 
+    public static final String ACTOR = "RSMEVAUTH";
+
     public static final String XSD_WSSE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
     public static final String XSD_WSU = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
+    public static final String XSD_DS = "http://www.w3.org/2000/09/xmldsig#";
 
-    public static void addSecurityBlock(SOAPMessage message, String certificateAlias, char[] password) throws SOAPException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, MarshalException, XMLSignatureException, TransformerException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static final String PREFIX_WSSE = "wsse";
+    public static final String PREFIX_WSU = "wsu";
+    public static final String PREFIX_DS = "ds";
 
-        if (message == null) {
+    /**
+     * Подписание элементов сообщения
+     *
+     * @param message сообщение (полное)
+     * @param idsOfElementsForSignature перечисление идентификаторов элементов, которые необходимо подписать. К Body автоматически добавляется идентификатор "_body". Если Body надо подписать, то в списке необходимо указать иддентификатор "_body".
+     * @param certificateAlias алиас сертификата
+     * @param password пароль от контейнера с закрытым ключом
+     * @throws SOAPException
+     * @throws CertificateException
+     * @throws KeyStoreException
+     * @throws UnrecoverableKeyException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidAlgorithmParameterException
+     * @throws MarshalException
+     * @throws XMLSignatureException
+     * @throws TransformerException
+     * @throws ClassNotFoundException
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     */
+    public static void addSecurityBlock(SOAPMessage message, List<String> idsOfElementsForSignature, String certificateAlias, char[] password) throws SOAPException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, MarshalException, XMLSignatureException, TransformerException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+
+        if (message == null || StringUtils.isEmpty(idsOfElementsForSignature)) {
             return;
         }
 
         // Prepare secured header
-        message.getSOAPPart().getEnvelope().addNamespaceDeclaration("wsse", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
-        message.getSOAPPart().getEnvelope().addNamespaceDeclaration("wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
-        message.getSOAPPart().getEnvelope().addNamespaceDeclaration("ds", "http://www.w3.org/2000/09/xmldsig#");
-        message.getSOAPBody().setAttributeNS("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd", "wsu:Id", "_1");
+        message.getSOAPPart().getEnvelope().addNamespaceDeclaration("wsse", XSD_WSSE);
+        message.getSOAPPart().getEnvelope().addNamespaceDeclaration("wsu", XSD_WSU);
+        message.getSOAPPart().getEnvelope().addNamespaceDeclaration("ds", XSD_DS);
+        message.getSOAPBody().setAttributeNS(XSD_WSU, "wsu:Id", "_body");
 
         WSSecHeader header = new WSSecHeader();
-        header.setActor("RSMEVAUTH");
+        header.setActor(ACTOR);
         header.setMustUnderstand(false);
 
         Element sec = header.insertSecurityHeader(message.getSOAPPart());
         Document doc = message.getSOAPPart().getEnvelope().getOwnerDocument();
 
         Element token = (Element) sec.appendChild(
-                doc.createElementNS("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "wsse:BinarySecurityToken"));
+                doc.createElementNS(XSD_WSSE, "wsse:BinarySecurityToken"));
         token.setAttribute("EncodingType", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary");
         token.setAttribute("ValueType", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3");
         String certIdGUID = java.util.UUID.randomUUID().toString();
         token.setAttribute("wsu:Id", certIdGUID);
-        token.setAttribute("xmlns:wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
-        token.setAttribute("xmlns:wsse", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
+        token.setAttribute("xmlns:wsu", XSD_WSU);
+        token.setAttribute("xmlns:wsse", XSD_WSSE);
         header.getSecurityHeader().appendChild(token);
 
         //----------------------
@@ -92,22 +122,21 @@ public class SignatureUtils {
         Transform transformC14N = fac.newTransform(Transforms.TRANSFORM_C14N_EXCL_OMIT_COMMENTS, (XMLStructure) null);
         transformList.add(transformC14N);
 
-        Reference ref = fac.newReference(
-                "#_1",
-                fac.newDigestMethod("http://www.w3.org/2001/04/xmldsig-more#gostr3411", null),
-                transformList, null, null);
-
-        Reference ref2 = fac.newReference(
-                "#_2",
-                fac.newDigestMethod("http://www.w3.org/2001/04/xmldsig-more#gostr3411", null),
-                transformList, null, null);
+        List<Reference> refs = new ArrayList<>();
+        for (String elementId: idsOfElementsForSignature) {
+            Reference ref = fac.newReference(
+                    "#" + elementId.trim(),
+                    fac.newDigestMethod("http://www.w3.org/2001/04/xmldsig-more#gostr3411", null),
+                    transformList, null, null);
+            refs.add(ref);
+        }
 
         // Make link to signing element
         SignedInfo si = fac.newSignedInfo(
                 fac.newCanonicalizationMethod(CanonicalizationMethod.EXCLUSIVE,
                         (C14NMethodParameterSpec) null),
                 fac.newSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#gostr34102001-gostr3411", null),
-                Arrays.asList(ref, ref2));
+                refs);
 
         // Prepare key information to verify signature in future on other side
         KeyInfoFactory kif = fac.getKeyInfoFactory();
@@ -132,31 +161,29 @@ public class SignatureUtils {
             keyE.removeChild(chl.item(i));
         }
 
-        Element secTokenRef = doc.createElementNS("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "wsse:SecurityTokenReference");
+        Element secTokenRef = doc.createElementNS(XSD_WSSE, "wsse:SecurityTokenReference");
         secTokenRef.setAttribute("wsu:Id", "StrId-" + java.util.UUID.randomUUID().toString());
-        secTokenRef.setAttribute("xmlns:wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
-        secTokenRef.setAttribute("xmlns:wsse", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
+        secTokenRef.setAttribute("xmlns:wsu", XSD_WSU);
+        secTokenRef.setAttribute("xmlns:wsse", XSD_WSSE);
         org.w3c.dom.Node str = keyE.appendChild(secTokenRef);
 
-        Element reference = doc.createElementNS("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "wsse:Reference");
+        Element reference = doc.createElementNS(XSD_WSSE, "wsse:Reference");
 
-        reference.setAttribute("xmlns:wsse", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
+        reference.setAttribute("xmlns:wsse", XSD_WSSE);
         Element strRef = (Element) str.appendChild(reference);
 
         strRef.setAttribute("ValueType", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3");
         strRef.setAttribute("URI", "#" + certIdGUID);
         header.getSecurityHeader().appendChild(sigE);
 
-
-//        NodeList nodeList = message.getSOAPHeader().getElementsByTagNameNS("*", "ServiceHeader");
-//        Element serviceHeader = null;
-//        if (nodeList != null && nodeList.getLength() > 0) {
-//            serviceHeader = (Element) nodeList.item(0);
-//            message.getSOAPHeader().removeChild(serviceHeader);
-//            message.getSOAPHeader().insertBefore(serviceHeader, message.getSOAPHeader().getFirstChild());
-//        }
     }
 
+    /**
+     * Проверка электронной подписи
+     *
+     * @param doc сообщение (полное)
+     * @throws Exception
+     */
     public static void verify(Document doc) throws Exception {
         // Получение узла, содержащего сертификат.
         final Element wssecontext = doc.createElementNS(null, "namespaceContext");
@@ -190,7 +217,7 @@ public class SignatureUtils {
         }
         System.out.println("Verify by: " + cert.getSubjectDN());
         // Поиск элемента Signature.
-        NodeList nl = doc.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature");
+        NodeList nl = doc.getElementsByTagNameNS(XSD_DS, "Signature");
         if (nl.getLength() == 0) {
             throw new Exception("Не найден элемент Signature.");
         }
@@ -246,13 +273,5 @@ public class SignatureUtils {
         sig.update(data);
         return sig.verify(signature);
     }
-
-    public static boolean verify(byte[] data,  byte[] signature, String certificateAlias) throws Exception {
-        DigitalSignatureFactory.init("JCP");
-        KeyStoreWrapper ksw = DigitalSignatureFactory.getKeyStoreWrapper();
-        X509Certificate certificate = ksw.getX509Certificate(certificateAlias);
-        return verify(ALGORITHM_NAME, certificate.getPublicKey(), data, signature);
-    }
-
 
 }

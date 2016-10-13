@@ -18,7 +18,9 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -43,11 +45,13 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext> { //ext
     public boolean handleMessage(SOAPMessageContext context) {
         if (context != null) {
             try {
+                LOGGER.info(SOAPMessage.class.getSimpleName());
+                SOAPMessage message = context.getMessage();
+
                 final Boolean outbound = (Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
                 if (outbound != null && outbound) {
-                    LOGGER.info(SOAPMessage.class.getSimpleName());
-                    SOAPMessage message = context.getMessage();
+                    // исходящее подписываем
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     try {
@@ -59,7 +63,12 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext> { //ext
 
                     WebServiceConfig aliasParam = configService.findOneByServiceIdAndName(serviceId, WebServiceParam.SIGNATURE_ALIAS, WebServiceParamType.STRING);
                     WebServiceConfig passwordParam = configService.findOneByServiceIdAndName(serviceId, WebServiceParam.SIGNATURE_PASSWORD);
-                    SignatureUtils.addSecurityBlock(message, aliasParam.getStringValue(), !StringUtils.isEmpty(passwordParam.getStringValue()) ? passwordParam.getStringValue().toCharArray() : null);
+                    List<WebServiceConfig> signatureElements = configService.findByServiceIdAndName(serviceId, WebServiceParam.SIGNATURE_ELEMENTS);
+
+                    if (signatureElements.isEmpty() || StringUtils.isEmpty(signatureElements.get(0).getStringValue()))
+                        return true;
+
+                    SignatureUtils.addSecurityBlock(message, Arrays.asList(signatureElements.get(0).getStringValue().split(",")), aliasParam.getStringValue(), !StringUtils.isEmpty(passwordParam.getStringValue()) ? passwordParam.getStringValue().toCharArray() : null);
 
                     message.saveChanges();
 
@@ -72,6 +81,9 @@ public class SignatureHandler implements SOAPHandler<SOAPMessageContext> { //ext
                     }
 
                     //SignatureUtils.verify(message.getSOAPPart());
+                } else {
+                    //
+                    SignatureUtils.verify(message.getSOAPPart());
                 }
                 return true;
             }  catch (Exception e) {
