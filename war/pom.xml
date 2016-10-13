@@ -124,6 +124,12 @@
             <artifactId>jaxws-rt</artifactId>
             <version>${sun.jaxws.version}</version>
             <scope>${jaxws.scope}</scope>
+           <exclusions>
+                <exclusion>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jvnet.jax-ws-commons.spring</groupId>
