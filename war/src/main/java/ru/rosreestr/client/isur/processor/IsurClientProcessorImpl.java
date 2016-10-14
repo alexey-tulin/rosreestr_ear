@@ -11,8 +11,6 @@ import ru.rosreestr.exception.DuplicateWebServiceException;
 import ru.rosreestr.exception.DuplicateWebServiceParamException;
 import ru.rosreestr.exception.NotFoundWebServiceException;
 import ru.rosreestr.exception.NotFoundWebServiceParamException;
-import ru.rosreestr.handler.LoggerHandler;
-import ru.rosreestr.handler.SignatureHandler;
 import ru.rosreestr.persistence.model.WebService;
 import ru.rosreestr.persistence.model.WebServiceCode;
 import ru.rosreestr.persistence.model.WebServiceConfig;
@@ -23,7 +21,6 @@ import ru.rosreestr.service.WebServiceService;
 import javax.annotation.PostConstruct;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 /**
  * Created by Tatiana Chukina on 28.09.2016 23:26.
@@ -39,8 +36,6 @@ public class IsurClientProcessorImpl implements IsurClientProcessor {
 
     private Integer serviceId;
 
-    private ServiceClient serviceClient;
-
     @Autowired
     private WebServiceService wsService;
 
@@ -50,18 +45,15 @@ public class IsurClientProcessorImpl implements IsurClientProcessor {
     @Autowired
     ApplicationContext applicationContext;
 
-    @Autowired
-    SignatureHandler signatureHandler;
-
-    @Autowired
-    LoggerHandler loggerHandler;
-
     /**
      * Method for invoking {@link IService#sendTask} service
      */
     @Override
-    public void sendTask(CoordinateTaskData taskMessage, Headers serviceHeader) {
+    public void sendTask(CoordinateTaskData taskMessage, Headers serviceHeader) throws NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException {
         LOG.info("start service sendTask");
+        WebServiceConfig wsdlParam = wsParamsService.findOneByServiceIdAndName(serviceId, WebServiceParam.WSDL);
+        URL url = new URL(wsdlParam.getStringValue());
+        ServiceClient serviceClient = new ServiceClient(url);
         IService customBindingIService = serviceClient.getCustomBindingIService();
         customBindingIService.sendTask(taskMessage, serviceHeader);
         LOG.info("end service sendTask");
@@ -73,16 +65,6 @@ public class IsurClientProcessorImpl implements IsurClientProcessor {
         WebService webService = wsService.findByCode(CODE);
         serviceId = webService.getServiceId();
 
-        WebServiceConfig wsdlParam = wsParamsService.findOneByServiceIdAndName(serviceId, WebServiceParam.WSDL);
-        URL url = new URL(wsdlParam.getStringValue());
-
-        List<WebServiceConfig> loggingEnableParams = wsParamsService.findByServiceIdAndName(serviceId, WebServiceParam.LOGGING_ENABLE);
-
-        serviceClient = new ServiceClient(url);
-        serviceClient.setLoggerHandler(loggerHandler);
-        serviceClient.setSignatureHandler(signatureHandler);
-        serviceClient.configureLogger(serviceId, !loggingEnableParams.isEmpty() &&
-                Boolean.TRUE.equals(loggingEnableParams.get(0).getBooleanValue()));
     }
 
     @Override

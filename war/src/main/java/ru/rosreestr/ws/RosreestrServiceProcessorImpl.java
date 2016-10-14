@@ -73,7 +73,7 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
     }
 
     @Override
-    public GetInformationResponse getInformation(GetInformationRequest request) {
+    public GetInformationResponse getInformation(GetInformationRequest request) throws NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException {
         LOG.info("ru.rosreestr.ws.RosreestrServiceProcessor.sendRequest");
         BigDecimal nextMessageNum = commonRepository.getNextMessageNum();
         DecimalFormat df = new DecimalFormat("#000000");

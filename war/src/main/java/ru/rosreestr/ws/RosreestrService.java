@@ -1,5 +1,7 @@
 package ru.rosreestr.ws;
 
+import ru.rosreestr.exception.DuplicateWebServiceParamException;
+import ru.rosreestr.exception.NotFoundWebServiceParamException;
 import ru.rosreestr.ws.model.GetInformationRequest;
 import ru.rosreestr.ws.model.GetInformationResponse;
 import ru.rosreestr.ws.model.ObjectFactory;
@@ -11,6 +13,7 @@ import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
+import java.net.MalformedURLException;
 
 /**
  * Created by Tatiana Chukina on 04.10.2016 22:43.
@@ -27,5 +30,5 @@ public interface RosreestrService {
     @ResponseWrapper(localName = "GetInformationResponse", targetNamespace = "http://aisercu.rosreestr.ru/")
     GetInformationResponse getInformation(
             @WebParam(name = "request", targetNamespace = "http://aisercu.rosreestr.ru/")
-            GetInformationRequest request);
+            GetInformationRequest request) throws NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException;
 }
