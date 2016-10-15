@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by KatrinaBosh on 14.10.2016.
+ * Класс для обеспечения возможность подучать ApplicationContext в экземплярах классов, не находящихся под управлением спринга
  */
 @Component
 public class ApplicationContextProvider implements ApplicationContextAware {

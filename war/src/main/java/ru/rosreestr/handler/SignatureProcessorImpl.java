@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by KatrinaBosh on 15.10.2016.
+ * Обработчик подписания/проверки подписи   входящих/исходящих SOAP сообщений
  */
 @Component
 public class SignatureProcessorImpl implements HandlerProcessor {
@@ -89,7 +89,11 @@ public class SignatureProcessorImpl implements HandlerProcessor {
                 return true;
             }  catch (Exception e) {
                 LOG.error(e.getMessage(), e);
-                loggerDbService.log(new Date(), new Date(), 0L, serviceId, LogType.JAVA, LogLevel.ERROR, 0, e.getMessage(), ExceptionUtils.getStackTrace(e));
+                try {
+                    loggerDbService.log(new Date(), new Date(), 0L, serviceId, LogType.JAVA, LogLevel.ERROR, 0, e.getMessage(), ExceptionUtils.getStackTrace(e));
+                } catch (Exception dbEx) {
+                    LOG.error("Error logging Exception to DB", dbEx);
+                }
             }
         }
         return true;

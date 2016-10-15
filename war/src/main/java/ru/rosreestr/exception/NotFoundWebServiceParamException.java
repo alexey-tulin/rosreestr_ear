@@ -1,7 +1,7 @@
 package ru.rosreestr.exception;
 
 /**
- * Created by KatrinaBosh on 09.10.2016.
+ * Исключение: параметр с заданным кодом не найден
  */
 public class NotFoundWebServiceParamException extends  Exception {
 

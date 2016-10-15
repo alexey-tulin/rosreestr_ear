@@ -3,7 +3,7 @@ package ru.rosreestr.exception;
 import ru.rosreestr.persistence.model.WebServiceCode;
 
 /**
- * Created by KatrinaBosh on 09.10.2016.
+ * Исключение: веб-сервис с заданным кодом не найден
  */
 public class NotFoundWebServiceException extends  Exception {
 

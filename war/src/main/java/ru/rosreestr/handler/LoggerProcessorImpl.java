@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by KatrinaBosh on 28.09.2016.
+ * Обработчик логирования в БД входящих/исходящих SOAP сообщений
  */
 @Component
 public class LoggerProcessorImpl implements HandlerProcessor {
@@ -64,7 +64,11 @@ public class LoggerProcessorImpl implements HandlerProcessor {
 
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            loggerDbService.log(new Date(), new Date(), 0L, serviceId, LogType.JAVA, LogLevel.ERROR, 0, e.getMessage(), ExceptionUtils.getStackTrace(e));
+            try {
+                loggerDbService.log(new Date(), new Date(), 0L, serviceId, LogType.JAVA, LogLevel.ERROR, 0, e.getMessage(), ExceptionUtils.getStackTrace(e));
+            } catch (Exception dbEx) {
+                LOG.error("Error logging Exception to DB", dbEx);
+        }
         }
         return true;
     }

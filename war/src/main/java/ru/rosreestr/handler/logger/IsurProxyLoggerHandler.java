@@ -4,7 +4,9 @@ import ru.rosreestr.handler.LoggerHandler;
 import ru.rosreestr.persistence.model.WebServiceCode;
 
 /**
- * Created by KatrinaBosh on 28.09.2016.
+ * Перехватчик SOAP сообщений.
+ * Назначение: логирование входящих/исходящих сообщений.
+ * Принадлежит сервису с кодом ISUR_PROXY.
  */
 public class IsurProxyLoggerHandler extends LoggerHandler {
 

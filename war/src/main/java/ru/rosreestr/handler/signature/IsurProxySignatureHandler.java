@@ -4,7 +4,9 @@ import ru.rosreestr.handler.SignatureHandler;
 import ru.rosreestr.persistence.model.WebServiceCode;
 
 /**
- * Created by KatrinaBosh on 15.10.2016.
+ * Перехватчик SOAP сообщений.
+ * Назначение: подписывание исходящих сообщений, проверка подписи входящих сообщений.
+ * Принадлежит сервису с кодом ISUR_PROXY.
  */
 public class IsurProxySignatureHandler extends SignatureHandler {
 

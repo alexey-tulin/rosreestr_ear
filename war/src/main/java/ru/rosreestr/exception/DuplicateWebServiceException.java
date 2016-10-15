@@ -6,7 +6,7 @@ import ru.rosreestr.persistence.model.WebServiceCode;
 import java.util.List;
 
 /**
- * Created by KatrinaBosh on 09.10.2016.
+ * Исключение: существует более одного веб-сервиса с одинаковым кодом
  */
 public class DuplicateWebServiceException  extends  Exception {
 

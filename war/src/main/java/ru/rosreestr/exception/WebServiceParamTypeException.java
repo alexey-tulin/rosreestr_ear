@@ -4,7 +4,7 @@ import ru.rosreestr.persistence.model.WebServiceConfig;
 import ru.rosreestr.persistence.model.WebServiceParamType;
 
 /**
- * Created by KatrinaBosh on 12.10.2016.
+ * Исключение: тип параметра не сообветствует заданному
  */
 public class WebServiceParamTypeException extends Exception {
 

@@ -10,6 +10,10 @@ import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import java.util.Set;
 
+/**
+ * Базовое описания перехватчика SOAP сообщений для подписания/проверки подписи сообщений.
+ * Обращается к контексту спринга и получает нужный бин-обработчик логирования
+ */
 public abstract class SignatureHandler implements SOAPHandler<SOAPMessageContext> { //extends SpringBeanAutowiringSupport
 
     private static final Logger LOGGER = Logger.getLogger(SignatureHandler.class);

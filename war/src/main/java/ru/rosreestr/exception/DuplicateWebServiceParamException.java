@@ -1,7 +1,7 @@
 package ru.rosreestr.exception;
 
 /**
- * Created by KatrinaBosh on 09.10.2016.
+ * Исключение: существует более одного параметром с заданным наименованием
  */
 public class DuplicateWebServiceParamException extends  Exception {
 

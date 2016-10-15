@@ -11,7 +11,8 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 import java.util.Set;
 
 /**
- * Created by KatrinaBosh on 28.09.2016.
+ * Базовое описания перехватчика SOAP сообщений для логирования сообщений.
+ * Обращается к контексту спринга и получает нужный бин-обработчик логирования
  */
 public abstract class LoggerHandler implements SOAPHandler<SOAPMessageContext> {
 
