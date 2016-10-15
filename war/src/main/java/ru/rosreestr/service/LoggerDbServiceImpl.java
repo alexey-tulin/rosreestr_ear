@@ -33,4 +33,11 @@ public class LoggerDbServiceImpl implements LoggerDbService {
     public void logXml(Integer serviceId, String message, Integer outbound) {
         loggerDbRepository.logXml(serviceId, message, outbound);
     }
+
+    @Override
+    @Transactional
+    public void delete(String nativeQueryText) {
+        loggerDbRepository.delete(nativeQueryText);
+    }
+
 }

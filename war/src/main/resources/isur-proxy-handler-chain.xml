@@ -7,9 +7,9 @@
             <javaee:handler-class>ru.rosreestr.handler.logger.IsurProxyLoggerHandler</javaee:handler-class>
         </javaee:handler>
     </javaee:handler-chain>
-    <javaee:handler-chain>
+<!--    <javaee:handler-chain>
         <javaee:handler>
             <javaee:handler-class>ru.rosreestr.handler.signature.IsurProxySignatureHandler</javaee:handler-class>
         </javaee:handler>
-    </javaee:handler-chain>
+    </javaee:handler-chain>-->
 </javaee:handler-chains>

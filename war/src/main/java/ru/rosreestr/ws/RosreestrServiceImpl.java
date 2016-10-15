@@ -14,7 +14,7 @@ import java.net.MalformedURLException;
 /**
  * Created by Tatiana Chukina on 04.10.2016 23:52.
  */
-@Service("rosreestrservice")
+@Service("rosreestrws")
 @WebService(serviceName = "rosreestrservice", targetNamespace = "http://aisercu.rosreestr.ru/",
         endpointInterface = "ru.rosreestr.ws.RosreestrService")
 @HandlerChain(file="isur-proxy-handler-chain.xml")

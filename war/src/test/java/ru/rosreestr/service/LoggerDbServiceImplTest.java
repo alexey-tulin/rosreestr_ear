@@ -43,9 +43,10 @@ public class LoggerDbServiceImplTest extends TestCase {
 
     @After
     public void destroy() {
-        // TODO дописать очищение БД от тестовых сущностей
-        //em.createQuery("delete ") if DB_ID = -1
-        //wsRepository.delete(webService);
+        loggerDbService.delete("delete from WS_LOG where DB_ID = -1");
+        loggerDbService.delete("delete from WS_XML_IN where SERVICE_ID = " + webService.getServiceId());
+        loggerDbService.delete("delete from WS_XML_OUT where SERVICE_ID = " + webService.getServiceId());
+        wsRepository.delete(webService);
     }
 
     @Test

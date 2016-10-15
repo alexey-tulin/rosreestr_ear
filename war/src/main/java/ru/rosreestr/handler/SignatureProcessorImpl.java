@@ -89,7 +89,7 @@ public class SignatureProcessorImpl implements HandlerProcessor {
                 return true;
             }  catch (Exception e) {
                 LOG.error(e.getMessage(), e);
-                loggerDbService.log(new Date(), new Date(), 0L, serviceId, LogType.JAVA, LogLevel.ERROR, 0, e.getMessage(), ExceptionUtils.getStackTrace(e),"");
+                loggerDbService.log(new Date(), new Date(), 0L, serviceId, LogType.JAVA, LogLevel.ERROR, 0, e.getMessage(), ExceptionUtils.getStackTrace(e));
             }
         }
         return true;

@@ -55,4 +55,10 @@ public class LoggerDbRepositoryImpl implements LoggerDbRepository {
                 .setParameter("outbound", outbound);
         query.executeUpdate();
     }
+
+    @Override
+    public void delete(String nativeQueryText) {
+        em.createNativeQuery(nativeQueryText.toString()).executeUpdate();
+    }
+
 }

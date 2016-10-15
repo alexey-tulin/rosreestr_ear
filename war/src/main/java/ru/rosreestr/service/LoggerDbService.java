@@ -47,4 +47,11 @@ public interface LoggerDbService {
      * @param outbound if outbound = 1 then insert into ws_xml_out
      */
     void logXml(Integer serviceId, String message, Integer outbound);
+
+    /**
+     *  Удаление объектов лога. Используется для удаления тестовых данных
+     *
+     * @param nativeQueryText
+     */
+    void delete(String nativeQueryText);
 }

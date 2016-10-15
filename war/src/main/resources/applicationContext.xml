@@ -23,7 +23,7 @@
         </wss:service>
     </wss:binding>
 
-    <bean id="isurtestws" class="ru.rosreestr.ws.IsurServiceImpl"/>
-    <bean id="rosreestrws" class="ru.rosreestr.ws.RosreestrServiceImpl"/>
+<!--    <bean id="isurtestws" class="ru.rosreestr.ws.IsurServiceImpl"/>
+    <bean id="rosreestrws" class="ru.rosreestr.ws.RosreestrServiceImpl"/>-->
 
 </beans>

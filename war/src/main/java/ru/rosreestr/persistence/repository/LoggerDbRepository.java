@@ -48,4 +48,10 @@ public interface LoggerDbRepository {
      */
     void logXml(Integer serviceId, String message, Integer outbound);
 
+    /**
+     * Удаление объектов лога. Используется для удаления тестовых данных
+     *
+     * @param nativeQueryText
+     */
+    void delete(String nativeQueryText);
 }

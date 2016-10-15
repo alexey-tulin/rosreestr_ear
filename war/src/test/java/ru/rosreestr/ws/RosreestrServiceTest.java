@@ -23,7 +23,7 @@ import ru.rosreestr.ws.model.GetInformationResponse;
 public class RosreestrServiceTest {
     private static final Logger LOG = Logger.getLogger(IsurClientProcessorImpl.class);
 
-    @Qualifier("rosreestrservice")
+    @Qualifier("rosreestrws")
     @Autowired
     private RosreestrService rosreestrService;
 
