@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by KatrinaBosh on 28.09.2016.
+ * Репозиторий для работы с данными сущности WebService
  */
 public interface WebServiceRepository extends JpaRepository<WebService, Long> {
 

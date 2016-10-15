@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by KatrinaBosh on 28.09.2016.
+ * Веб-сервис
  */
 @Entity
 @Table(name = "WS_SERVICES")
@@ -27,6 +27,9 @@ public class WebService implements Serializable {
     @Column(name = "NAME")
     private String name;
 
+    /**
+     * Конфигурация веб-сервиса
+     */
     @OneToMany
     @JoinColumn(name = "SERVICE_ID", referencedColumnName = "SERVICE_ID")
     private List<WebServiceConfig> params;

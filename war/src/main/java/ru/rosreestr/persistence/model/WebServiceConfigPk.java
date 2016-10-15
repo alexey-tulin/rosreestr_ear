@@ -5,7 +5,7 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 /**
- * Created by KatrinaBosh on 08.10.2016.
+ * Составной первичный ключ (PK) для WebServiceConfig
  */
 @Embeddable
 public class WebServiceConfigPk implements Serializable {

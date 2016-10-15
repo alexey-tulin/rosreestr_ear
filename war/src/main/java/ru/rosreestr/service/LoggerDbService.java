@@ -3,7 +3,7 @@ package ru.rosreestr.service;
 import java.util.Date;
 
 /**
- * Created by KatrinaBosh on 08.10.2016.
+ * Сервис логирования в БД входящих/исходящих SOAP сообщений и ошибок
  */
 public interface LoggerDbService {
 

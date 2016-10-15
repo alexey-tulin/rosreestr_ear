@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 import java.util.Date;
 
 /**
- * Created by KatrinaBosh on 08.10.2016.
+ * Зеализация сервиса логирования в БД входящих/исходящих SOAP сообщений и ошибок
  */
 @Service
 public class LoggerDbServiceImpl implements LoggerDbService {

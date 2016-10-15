@@ -7,7 +7,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by KatrinaBosh on 08.10.2016.
+ * Конфигурация веб-сервиса.
+ * Каждая запись хранит 1 параметр веб-сервиса.
+ * Значение может быть строковым, целочисленным или дата и время.
+ * Логические параметра записываются в строковое поле в виде строки true/false
  */
 @Entity
 @Table(name = "WS_CONFIG")
@@ -18,21 +21,39 @@ public class WebServiceConfig implements Serializable {
     @EmbeddedId
     private WebServiceConfigPk id;
 
+    /**
+     * Наименование параметров
+     */
     @Column(name = "name_param", insertable = false, updatable = false)
     private String nameParam;
 
+    /**
+     * Ссылка на веб-сервис, которому принадлежит данный параметр
+     */
     @Column(name = "service_id", insertable = false, updatable = false)
     private Integer serviceId;
 
+    /**
+     * Строковое значение параметра
+     */
     @Column(name = "val_string")
     private String stringValue;
 
+    /**
+     * Целочисленное значение параметра
+     */
     @Column(name = "val_num")
     private Integer integerValue;
 
+    /**
+     * Значение параметра в виде даты и времени
+     */
     @Column(name = "val_date")
     private Date dateValue;
 
+    /**
+     * Описание параметра
+     */
     @Column(name = "description")
     private String description;
 
@@ -101,6 +122,15 @@ public class WebServiceConfig implements Serializable {
         this.stringValue = booleanValue != null ? booleanValue.toString() : null;
     }
 
+    /**
+     * Позволяет определить тип параметра.
+     * Тип вычисляется до первого выполнения условия (если условие выполнено, следующая проверка не производится).
+     * Если заполнено строковое поле, значит параметр строкового типа (STRING).
+     * Если заполнено целочисленное поле, значит параметр целоцисленного типа (INTEGER).
+     * Если заполнено поле параметр типа 'дата и время', значит тараметр имеет тип 'дата и время' (DATE).
+     * Если нет ни одного соответствия, возращается null.
+     * @return STRING/INTEGER/DATE/null
+     */
     @Transient
     public WebServiceParamType readType() {
 

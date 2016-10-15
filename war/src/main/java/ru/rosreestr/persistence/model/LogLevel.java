@@ -1,7 +1,7 @@
 package ru.rosreestr.persistence.model;
 
 /**
- * Created by KatrinaBosh on 28.09.2016.
+ * Уровень логирования
  */
 public class LogLevel {
 

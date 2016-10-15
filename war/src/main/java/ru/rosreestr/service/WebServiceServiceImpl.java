@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by KatrinaBosh on 08.10.2016.
+ * Реализация сервиса для работы с данными сущности WebService
  */
 @Service
 public class WebServiceServiceImpl implements WebServiceService {

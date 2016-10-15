@@ -1,7 +1,8 @@
 package ru.rosreestr.persistence.model;
 
 /**
- * Created by KatrinaBosh on 09.10.2016.
+ * Уникальный код сервиса.
+ * Используется для определения объекта веб-сервиса (запись WS_SERVICES)
  */
 public enum WebServiceCode {
     ISUR,

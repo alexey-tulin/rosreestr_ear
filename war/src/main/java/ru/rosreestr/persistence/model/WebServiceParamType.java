@@ -1,7 +1,7 @@
 package ru.rosreestr.persistence.model;
 
 /**
- * Created by KatrinaBosh on 12.10.2016.
+ * Типы параметра веб-сервиса.
  */
 public enum WebServiceParamType {
 

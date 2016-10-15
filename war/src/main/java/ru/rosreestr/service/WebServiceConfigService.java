@@ -9,7 +9,7 @@ import ru.rosreestr.persistence.model.WebServiceParamType;
 import java.util.List;
 
 /**
- * Created by KatrinaBosh on 09.10.2016.
+ * Сервис для работы с данными сущности WebServiceConfig
  */
 public interface WebServiceConfigService {
 

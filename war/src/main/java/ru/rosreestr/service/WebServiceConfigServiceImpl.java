@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by KatrinaBosh on 09.10.2016.
+ * Реализация сервиса для работы с данными сущности WebServiceConfig
  */
 @Service
 public class WebServiceConfigServiceImpl implements WebServiceConfigService {
