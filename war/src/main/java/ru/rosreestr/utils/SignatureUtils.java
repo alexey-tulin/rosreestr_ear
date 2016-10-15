@@ -32,12 +32,11 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by KatrinaBosh on 30.09.2016.
+ * Утилитный класс для подписания/проверки подписи SOAP сообщений
  */
 public class SignatureUtils {
 
