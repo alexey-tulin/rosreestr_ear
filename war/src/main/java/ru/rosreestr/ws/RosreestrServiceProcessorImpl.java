@@ -83,7 +83,17 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
         serviceClient.sendTask(createTaskMessage(request, serviceNumber), createHeaders(serviceNumber));
         GetInformationResponse sendRequestResponse = new GetInformationResponse();
         sendRequestResponse.setServiceNumber(serviceNumber);
+
+        serviceClient.getRequestsList(createRequestIn());
         return sendRequestResponse;
+    }
+
+    private GetRequestListInMessage createRequestIn() {
+        GetRequestListInMessage requestListInMessage = new GetRequestListInMessage();
+        requestListInMessage.setServiceCode("047202");
+        requestListInMessage.setToDate(CommonUtils.getXmlGregorianCurrentDate());
+        requestListInMessage.setFromDate(CommonUtils.getXmlGregorianCurrentDate());
+        return requestListInMessage;
     }
 
     private Headers createHeaders(String serviceNumber) {
