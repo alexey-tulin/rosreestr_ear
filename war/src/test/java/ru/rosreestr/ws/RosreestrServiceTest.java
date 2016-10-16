@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 import ru.rosreestr.client.isur.processor.IsurClientProcessorImpl;
 import ru.rosreestr.config.AppConfig;
+import ru.rosreestr.config.PersistentConfig;
 import ru.rosreestr.ws.model.GetInformationRequest;
 import ru.rosreestr.ws.model.GetInformationResponse;
 
@@ -19,7 +20,7 @@ import ru.rosreestr.ws.model.GetInformationResponse;
  * Test to {@link RosreestrService}
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfig.class})
+@ContextConfiguration(classes = {AppConfig.class, PersistentConfig.class})
 public class RosreestrServiceTest {
     private static final Logger LOG = Logger.getLogger(IsurClientProcessorImpl.class);
 

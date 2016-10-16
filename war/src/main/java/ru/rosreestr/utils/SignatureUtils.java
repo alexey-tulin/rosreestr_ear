@@ -25,6 +25,7 @@ import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.*;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.security.*;
@@ -45,6 +46,7 @@ public class SignatureUtils {
     public static final String ALGORITHM_NAME = "GOST3411withGOST3410EL";
 
     public static final String ACTOR = "RSMEVAUTH";
+    public static final String BODY_ID = "_body";
 
     public static final String XSD_WSSE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
     public static final String XSD_WSU = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
@@ -82,11 +84,17 @@ public class SignatureUtils {
             return;
         }
 
+        idsOfElementsForSignature = existingElementsIdsForSignature(message.getSOAPPart(), idsOfElementsForSignature);
+        if (StringUtils.isEmpty(idsOfElementsForSignature)) {
+            LOGGER.info("skip signing");
+            return;
+        }
+
         // Prepare secured header
         message.getSOAPPart().getEnvelope().addNamespaceDeclaration("wsse", XSD_WSSE);
         message.getSOAPPart().getEnvelope().addNamespaceDeclaration("wsu", XSD_WSU);
         message.getSOAPPart().getEnvelope().addNamespaceDeclaration("ds", XSD_DS);
-        message.getSOAPBody().setAttributeNS(XSD_WSU, "wsu:Id", "_body");
+        message.getSOAPBody().setAttributeNS(XSD_WSU, "wsu:Id", BODY_ID);
 
         WSSecHeader header = new WSSecHeader();
         header.setActor(ACTOR);
@@ -271,6 +279,38 @@ public class SignatureUtils {
         sig.initVerify(publicKey);
         sig.update(data);
         return sig.verify(signature);
+    }
+
+    /**
+     * Проверить нуждается ли документ в подписании
+     *
+     * @param doc документ
+     * @param idsOfElementsForSignature идентификаторы элементов, которые надо подписывать
+     * @return true если найден элемент содержащий идентификатор или нужно подписать Body.
+     */
+    public static List<String> existingElementsIdsForSignature(Document doc, List<String> idsOfElementsForSignature) {
+
+        List<String> existsElementsIdForSignature = new ArrayList<>();
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
+        XPathExpression expr = null;
+        try {
+            for (String id: idsOfElementsForSignature) {
+                if (BODY_ID.equals(id)) {
+                    existsElementsIdForSignature.add(id);
+                } else {
+                    expr = xpath.compile("//*[@Id=\"" + id + "\"]"); // String.format("//*[@*:Id=\"%d\"]", "" + id)
+                    NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                    if (nodeList.getLength() > 0) {
+                        existsElementsIdForSignature.add(id);
+                    }
+                }
+            }
+        } catch (XPathExpressionException e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+
+        return existsElementsIdForSignature;
     }
 
 }
