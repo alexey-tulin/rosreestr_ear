@@ -123,13 +123,7 @@
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-rt</artifactId>
             <version>${sun.jaxws.version}</version>
-            <scope>${jaxws.scope}</scope>
-           <exclusions>
-                <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-            </exclusions>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jvnet.jax-ws-commons.spring</groupId>
