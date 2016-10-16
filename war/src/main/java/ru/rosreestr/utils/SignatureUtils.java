@@ -299,7 +299,7 @@ public class SignatureUtils {
                 if (BODY_ID.equals(id)) {
                     existsElementsIdForSignature.add(id);
                 } else {
-                    expr = xpath.compile("//*[@Id=\"" + id + "\"]"); // String.format("//*[@*:Id=\"%d\"]", "" + id)
+                    expr = xpath.compile("//*[contains(@*[local-name() = \"Id\"],'" + id + "')]");
                     NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
                     if (nodeList.getLength() > 0) {
                         existsElementsIdForSignature.add(id);
