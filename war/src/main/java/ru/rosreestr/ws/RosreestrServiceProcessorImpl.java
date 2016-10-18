@@ -42,9 +42,9 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
 
     private Integer serviceId;
 
-    private static final String FROM_ORG_CODE = "2033";
+    private static final String FROM_ORG_CODE = "707";
     private static final String TO_ORG_CODE = "111";
-    private static final String SERVICE_NUMBER_TEMPLATE = "2033-9000085-047202-%s/%s";
+    private static final String SERVICE_NUMBER_TEMPLATE = "707-9000095-047202-%s/%s";
     private static final String SERVICE_TYPE_CODE = "047202";
     private static final String DOCUMENT_TYPE_CODE = "77290";
 
@@ -84,7 +84,7 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
         GetInformationResponse sendRequestResponse = new GetInformationResponse();
         sendRequestResponse.setServiceNumber(serviceNumber);
 
-        serviceClient.getRequestsList(createRequestIn());
+     //   serviceClient.getRequestsList(createRequestIn());
         return sendRequestResponse;
     }
 
