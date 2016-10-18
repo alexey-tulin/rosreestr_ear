@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Обработчик подписания/проверки подписи   входящих/исходящих SOAP сообщений
  */
-@Component
+@Component("signatureProcessorImpl")
 public class SignatureProcessorImpl implements HandlerProcessor {
 
     private static final Logger LOG = Logger.getLogger(SignatureProcessorImpl.class);

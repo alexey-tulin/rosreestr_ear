@@ -1,7 +1,8 @@
 package ru.rosreestr.handler;
 
 import org.apache.log4j.Logger;
-import ru.rosreestr.context.ApplicationContextProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import ru.rosreestr.persistence.model.WebServiceCode;
 
 import javax.xml.namespace.QName;
@@ -14,17 +15,23 @@ import java.util.Set;
  * Базовое описания перехватчика SOAP сообщений для логирования сообщений.
  * Обращается к контексту спринга и получает нужный бин-обработчик логирования
  */
-public abstract class LoggerHandler implements SOAPHandler<SOAPMessageContext> {
+public class LoggerHandler implements SOAPHandler<SOAPMessageContext> {
 
     private static final Logger LOG = Logger.getLogger(LoggerHandler.class);
 
-    public static final WebServiceCode CODE = WebServiceCode.ISUR;
+    private final WebServiceCode code;
+    @Autowired
+    @Qualifier(value = "loggerProcessorImpl")
+    private HandlerProcessor loggerProcessor;
+
+    public LoggerHandler(WebServiceCode code) {
+        this.code = code;
+    }
 
     public boolean handleMessage(SOAPMessageContext context) {
 
         try {
-            HandlerProcessor loggerProcessor = ApplicationContextProvider.getApplicationContext().getBean(LoggerProcessorImpl.class);
-            loggerProcessor.handleMessage(context, getWebServiceCode());
+            loggerProcessor.handleMessage(context, this.code);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }
@@ -43,6 +50,4 @@ public abstract class LoggerHandler implements SOAPHandler<SOAPMessageContext> {
         // --
         return null;
     }
-
-    public abstract WebServiceCode getWebServiceCode();
 }

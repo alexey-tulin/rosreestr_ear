@@ -18,7 +18,6 @@ import javax.jws.WebService;
 @Service("isurtestws")
 @WebService(serviceName = "isurtestws", targetNamespace = "http://asguf.mos.ru/rkis_gu/coordinate/v5/",
         endpointInterface = "ru.rosreestr.ws.IsurService")
-@HandlerChain(file="isur-handler-chain.xml")
 public class IsurServiceImpl implements IsurService {
 
     @Autowired

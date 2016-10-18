@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Обработчик логирования в БД входящих/исходящих SOAP сообщений
  */
-@Component
+@Component("loggerProcessorImpl")
 public class LoggerProcessorImpl implements HandlerProcessor {
 
     private static final Logger LOG = Logger.getLogger(LoggerProcessorImpl.class);

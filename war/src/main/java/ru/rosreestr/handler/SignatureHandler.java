@@ -1,6 +1,9 @@
 package ru.rosreestr.handler;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import ru.rosreestr.context.ApplicationContextProvider;
 import ru.rosreestr.persistence.model.WebServiceCode;
 
@@ -14,9 +17,17 @@ import java.util.Set;
  * Базовое описания перехватчика SOAP сообщений для подписания/проверки подписи сообщений.
  * Обращается к контексту спринга и получает нужный бин-обработчик логирования
  */
-public abstract class SignatureHandler implements SOAPHandler<SOAPMessageContext> { //extends SpringBeanAutowiringSupport
+public class SignatureHandler implements SOAPHandler<SOAPMessageContext> { //extends SpringBeanAutowiringSupport
 
     private static final Logger LOGGER = Logger.getLogger(SignatureHandler.class);
+    private final WebServiceCode code;
+    @Autowired
+    @Qualifier(value = "signatureProcessorImpl")
+    private HandlerProcessor handlerProcessor;
+
+    public SignatureHandler(WebServiceCode code) {
+        this.code = code;
+    }
 
     public Set<QName> getHeaders() {
         // todo
@@ -26,8 +37,7 @@ public abstract class SignatureHandler implements SOAPHandler<SOAPMessageContext
     public boolean handleMessage(SOAPMessageContext context) {
 
             try {
-                HandlerProcessor loggerProcessor = ApplicationContextProvider.getApplicationContext().getBean(SignatureProcessorImpl.class);
-                loggerProcessor.handleMessage(context, getWebServiceCode());
+                handlerProcessor.handleMessage(context, this.code);
             }  catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             }
@@ -44,6 +54,4 @@ public abstract class SignatureHandler implements SOAPHandler<SOAPMessageContext
         // todo
 
     }
-
-    public abstract WebServiceCode getWebServiceCode();
 }

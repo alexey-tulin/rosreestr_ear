@@ -13,17 +13,32 @@
 
     <wss:binding url="/isurtestws">
         <wss:service>
-            <ws:service bean="#isurtestws"/>
+            <ws:service bean="#isurtestws">
+                <ws:handlers>
+                    <ref bean="isurSignatureHandler"/>
+                    <ref bean="isurLoggerHandler"/>
+                </ws:handlers>
+            </ws:service>
         </wss:service>
     </wss:binding>
 
     <wss:binding url="/rosreestrws">
         <wss:service>
-            <ws:service bean="#rosreestrws"/>
+            <ws:service bean="#rosreestrws">
+                <ws:handlers>
+                    <ref bean="isurProxyLoggerHandler"/>
+                </ws:handlers>
+            </ws:service>
         </wss:service>
     </wss:binding>
 
-<!--    <bean id="isurtestws" class="ru.rosreestr.ws.IsurServiceImpl"/>
-    <bean id="rosreestrws" class="ru.rosreestr.ws.RosreestrServiceImpl"/>-->
-
+    <bean id="isurSignatureHandler" class="ru.rosreestr.handler.SignatureHandler">
+        <constructor-arg value="#{ T(ru.rosreestr.persistence.model.WebServiceCode).ISUR }" />
+    </bean>
+    <bean id="isurLoggerHandler" class="ru.rosreestr.handler.LoggerHandler">
+        <constructor-arg value="#{ T(ru.rosreestr.persistence.model.WebServiceCode).ISUR }" />
+    </bean>
+    <bean id="isurProxyLoggerHandler" class="ru.rosreestr.handler.LoggerHandler">
+        <constructor-arg value="#{ T(ru.rosreestr.persistence.model.WebServiceCode).ISUR_PROXY }" />
+    </bean>
 </beans>

@@ -14,7 +14,6 @@ import java.net.URL;
  * Generated source version: 2.2
  */
 @WebServiceClient(name = "Service", targetNamespace = "http://asguf.mos.ru/rkis_gu/coordinate/v5/")
-@HandlerChain(file="isur-handler-chain.xml")
 public class ServiceClient extends Service {
 
     private final static URL SERVICE_WSDL_LOCATION;
