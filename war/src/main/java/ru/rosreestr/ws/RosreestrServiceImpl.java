@@ -7,12 +7,12 @@ import ru.rosreestr.exception.NotFoundWebServiceParamException;
 import ru.rosreestr.ws.model.GetInformationRequest;
 import ru.rosreestr.ws.model.GetInformationResponse;
 
-import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import java.net.MalformedURLException;
 
 /**
  * Created by Tatiana Chukina on 04.10.2016 23:52.
+ *
  */
 @Service("rosreestrws")
 @WebService(serviceName = "rosreestrservice", targetNamespace = "http://aisercu.rosreestr.ru/",

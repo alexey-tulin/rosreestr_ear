@@ -21,51 +21,17 @@ import java.util.List;
  */
 @WebServiceClient(name = "Service", targetNamespace = "http://asguf.mos.ru/rkis_gu/coordinate/v5/")
 public class ServiceClient extends Service {
-
-    private final static URL SERVICE_WSDL_LOCATION;
-    private final static WebServiceException SERVICE_EXCEPTION;
     private final static QName SERVICE_QNAME = new QName("http://asguf.mos.ru/rkis_gu/coordinate/v5/", "Service");
 
-    private final static SignatureHandler signatureHandler;
-    private final static LoggerHandler loggerHandler;
+    private final SignatureHandler signatureHandler;
+    private final LoggerHandler loggerHandler;
 
-    static {
-        URL url = null;
-        WebServiceException e = null;
-        try {
-            url = new URL("http://212.45.30.233:81/IsurTest/Coordinate/V5/Service.svc?singleWsdl");
-        } catch (MalformedURLException ex) {
-            e = new WebServiceException(ex);
-        }
-        SERVICE_WSDL_LOCATION = url;
-        SERVICE_EXCEPTION = e;
+    public ServiceClient(URL wsdlLocation) {
+        super(wsdlLocation, SERVICE_QNAME);
         signatureHandler = (SignatureHandler) ApplicationContextProvider.getApplicationContext().getBean("isurSignatureHandler");
         loggerHandler = (LoggerHandler) ApplicationContextProvider.getApplicationContext().getBean("isurLoggerHandler");
     }
 
-    public ServiceClient() {
-        super(__getWsdlLocation(), SERVICE_QNAME);
-    }
-
-    public ServiceClient(WebServiceFeature... features) {
-        super(__getWsdlLocation(), SERVICE_QNAME, features);
-    }
-
-    public ServiceClient(URL wsdlLocation) {
-        super(wsdlLocation, SERVICE_QNAME);
-    }
-
-    public ServiceClient(URL wsdlLocation, WebServiceFeature... features) {
-        super(wsdlLocation, SERVICE_QNAME, features);
-    }
-
-    public ServiceClient(URL wsdlLocation, QName serviceName) {
-        super(wsdlLocation, serviceName);
-    }
-
-    public ServiceClient(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
-        super(wsdlLocation, serviceName, features);
-    }
 
     /**
      * @return returns IService
@@ -99,12 +65,5 @@ public class ServiceClient extends Service {
         handlers.add(loggerHandler);
         ((BindingProvider) customBindingIService).getBinding().setHandlerChain(handlers);
         return customBindingIService;
-    }
-
-    private static URL __getWsdlLocation() {
-        if (SERVICE_EXCEPTION != null) {
-            throw SERVICE_EXCEPTION;
-        }
-        return SERVICE_WSDL_LOCATION;
     }
 }
