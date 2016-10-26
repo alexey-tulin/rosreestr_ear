@@ -1,38 +1,37 @@
 package ru.rosreestr;
 
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.rosreestr.client.isur.IService;
-import ru.rosreestr.client.isur.ServiceClient;
-import ru.rosreestr.client.isur.model.*;
-import ru.rosreestr.config.AppConfig;
-import ru.rosreestr.config.AppProperties;
-import ru.rosreestr.utils.CommonUtils;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import ru.rosreestr.utils.SignatureUtils;
-import ru.voskhod.crypto.DigitalSignatureFactory;
-import ru.voskhod.crypto.KeyStoreWrapper;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
-import java.util.UUID;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringReader;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfig.class})
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(classes = {AppConfig.class})
 public class IsurSignatureTest {
 // TODO допилить
     private static final Logger LOG = Logger.getLogger(IsurSignatureTest.class);
     private static final String FROM_ORG_CODE = "2033";
     private static final String TO_ORG_CODE = "1111";
     private static final String SERVICE_NUMBER_TEMPLATE = "2033-9000085-047202-%s/%s";
+
+    @Test
+    public void testSignatureVerify() throws Exception {
+        String response = " <s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"><s:Header><h:ServiceHeader xmlns:h=\"http://asguf.mos.ru/rkis_gu/coordinate/v5/\" xmlns=\"http://asguf.mos.ru/rkis_gu/coordinate/v5/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" u:Id=\"_2\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"><FromOrgCode>1111</FromOrgCode><ToOrgCode>707</ToOrgCode><MessageId>bdab73e8-ebe9-4f50-b05a-5017416b5514</MessageId><RelatesTo>b414750c-5705-4c53-b410-de5dca3d06bc</RelatesTo><RequestDateTime>2016-10-25T15:05:14.2976558Z</RequestDateTime></h:ServiceHeader><Security xmlns=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" s:actor=\"RSMEVAUTH\" xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"><o:BinarySecurityToken xmlns:o=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" EncodingType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary\" ValueType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3\" u:Id=\"uuid-b9ade157-6294-4cd2-9a85-0c0f249cf4ed-9441\">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</o:BinarySecurityToken><Signature xmlns=\"http://www.w3.org/2000/09/xmldsig#\"><SignedInfo><CanonicalizationMethod Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/><SignatureMethod Algorithm=\"http://www.w3.org/2001/04/xmldsig-more#gostr34102001-gostr3411\"/><Reference URI=\"#_1\"><Transforms><Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/></Transforms><DigestMethod Algorithm=\"http://www.w3.org/2001/04/xmldsig-more#gostr3411\"/><DigestValue>BXcCzrRlTMOJAc7l51wwQmZh7obBGLVxulRE1AfAMMM=</DigestValue></Reference><Reference URI=\"#_2\"><Transforms><Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/></Transforms><DigestMethod Algorithm=\"http://www.w3.org/2001/04/xmldsig-more#gostr3411\"/><DigestValue>sDIbRcABhLSQDpQSZoaktZ34pIoWt53mB7cTRqh/OB8=</DigestValue></Reference></SignedInfo><SignatureValue>wNPxyT2qhpjYiRYDiwgCDXmE6VJwCn4/u0v3xoycADSeiQToozyU33nBrjFVKW+eyJhgeaPC7BoXM6SKJwY+7Q==</SignatureValue><KeyInfo><o:SecurityTokenReference xmlns:o=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\"><o:Reference URI=\"#uuid-b9ade157-6294-4cd2-9a85-0c0f249cf4ed-9441\" ValueType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3\"/></o:SecurityTokenReference></KeyInfo></Signature></Security></s:Header><s:Body xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" u:Id=\"_1\"><ErrorMessage xmlns=\"http://asguf.mos.ru/rkis_gu/coordinate/v5/\"><Error><ErrorCode>1</ErrorCode><ErrorText>Переданное значение поля \"ServiceNumber\" (707-9000095-047202-000205/16) не соответствует формату уникального номера обращения на оказание государственной услуги.</ErrorText></Error></ErrorMessage></s:Body></s:Envelope>";
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        DocumentBuilder db = documentBuilderFactory.newDocumentBuilder();
+
+        Document doc = db.parse(
+                new InputSource(new StringReader(response))
+        );
+        SignatureUtils.verify(doc);
+    }
 
 //    @Autowired
 //    private ServiceClient serviceClient;

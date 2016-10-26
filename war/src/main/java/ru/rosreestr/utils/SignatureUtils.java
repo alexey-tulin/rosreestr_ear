@@ -12,9 +12,7 @@ import org.w3c.dom.NodeList;
 import ru.voskhod.crypto.DigitalSignatureFactory;
 import ru.voskhod.crypto.KeyStoreWrapper;
 
-import javax.xml.crypto.KeySelector;
-import javax.xml.crypto.MarshalException;
-import javax.xml.crypto.XMLStructure;
+import javax.xml.crypto.*;
 import javax.xml.crypto.dsig.*;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.dom.DOMValidateContext;
@@ -193,9 +191,11 @@ public class SignatureUtils {
      */
     public static void verify(Document doc) throws Exception {
         // Получение узла, содержащего сертификат.
-        final Element wssecontext = doc.createElementNS(null, "namespaceContext");
-        wssecontext.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:wsse", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
-        NodeList secnodeList = XPathAPI.selectNodeList(doc.getDocumentElement(), "//wsse:Security");
+        XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPath xpath = xPathfactory.newXPath();
+        XPathExpression expr = null;
+        expr = xpath.compile("//*[local-name() = 'Security']");
+        NodeList secnodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 
         // Поиск элемента сертификата в блоке BinarySecurityToken.
         Element r = null;
@@ -204,15 +204,21 @@ public class SignatureUtils {
             String actorAttr = null;
             for (int i = 0; i < secnodeList.getLength(); i++) {
                 el = (Element) secnodeList.item(i);
-                actorAttr = el.getAttributeNS("http://schemas.xmlsoap.org/soap/envelope/", "actor");
-                if (actorAttr != null && actorAttr.equals("http://smev.gosuslugi.ru/actors/smev")) {
-                    r = (Element) XPathAPI.selectSingleNode(el, "//wsse:BinarySecurityToken[1]", wssecontext);
-                    break;
+                //expr = xpath.compile("//*[contains(@*[local-name() = 'actor'],'" + ACTOR + "')]");
+                expr = xpath.compile("//@*[local-name() = 'actor']");
+                actorAttr = (String) expr.evaluate(el, XPathConstants.STRING);
+                if (ACTOR.equals(actorAttr)) {
+                    expr = xpath.compile("//*[local-name() = 'BinarySecurityToken']");
+                    NodeList rList = (NodeList) expr.evaluate(el, XPathConstants.NODESET);
+                    if (rList.getLength() > 0) {
+                        r = (Element) rList.item(0);
+                        break;
+                    }
                 }
             }
         }
         if (r == null) {
-            return;
+            throw new Exception("Не найден елемент BinarySecurityToken");
         }
         // Получение сертификата.
         final X509Security x509 = new X509Security(r);
@@ -224,18 +230,52 @@ public class SignatureUtils {
         }
         System.out.println("Verify by: " + cert.getSubjectDN());
         // Поиск элемента Signature.
-        NodeList nl = doc.getElementsByTagNameNS(XSD_DS, "Signature");
-        if (nl.getLength() == 0) {
+        expr = xpath.compile("//*[local-name() = 'Signature']");
+        NodeList signatureList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+        if (signatureList.getLength() == 0) {
             throw new Exception("Не найден элемент Signature.");
         }
+        Element signatureElement = (Element) signatureList.item(0);
         // Задаем открытый ключ для проверки подписи.
         Provider xmlDSigProvider = (Provider) Class.forName("ru.CryptoPro.JCPxml.dsig.internal.dom.XMLDSigRI").getConstructor().newInstance();
-        XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM", xmlDSigProvider);
-        DOMValidateContext valContext = new DOMValidateContext(KeySelector.singletonKeySelector(cert.getPublicKey()), nl.item(0));
+        final XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM", xmlDSigProvider);
+        DOMValidateContext valContext = new DOMValidateContext(KeySelector.singletonKeySelector(cert.getPublicKey()), signatureElement);
+        valContext.setURIDereferencer(new URIDereferencer() {
+            @Override
+            public Data dereference(URIReference uriReference, XMLCryptoContext context) throws URIReferenceException {
+//                    if (uriReference.getURI() == null) {
+//                        Data data = new OctetStreamData(this.inputStream);
+//                        return data;
+//                    }
+//                    else {
+                URIDereferencer defaultDereferencer = XMLSignatureFactory.getInstance("DOM").
+                        getURIDereferencer();
+                return defaultDereferencer.dereference(uriReference, context);
+                //}
+            }
+        });
+
+//        NodeList idAttributeElements = (NodeList) xpath.evaluate("//*[@*[local-name() = 'Id']]", doc, XPathConstants.NODESET);
+//        for (int i = 0; i < idAttributeElements.getLength(); i++) {
+//            //
+//            Attr id = (Attr) xpath.evaluate("//@*[local-name() = 'Id']", doc, XPathConstants.NODE);//((Element)idAttributeElements.item(i)).getAttributeNodeNS("*", "Id");
+//            IdResolver.registerElementById((Element) idAttributeElements.item(i), id);
+//            //
+//            //valContext.setIdAttributeNS((Element) idAttributes.item(i), null, "ID");
+//            //
+//
+//        }
+//      valContext.setIdAttributeNS((Element) signatureElement.getParentNode(), XSD_WSU, "Id");
         XMLSignature signature = fac.unmarshalXMLSignature(valContext);
 
         // Проверяем подпись и выводим результат проверки.
-        LOGGER.info("Verified: " + signature.validate(valContext));
+        boolean isVerified = signature.validate(valContext);
+        LOGGER.info("Verified: " + isVerified);
+
+        if (!isVerified) {
+            throw new Exception("Подпись не прошла проверку");
+        }
+
     }
 
     /**
