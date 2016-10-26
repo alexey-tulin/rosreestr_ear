@@ -43,9 +43,9 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
     private Integer serviceId;
 
     private static final String FROM_ORG_CODE = "707";
-    private static final String TO_ORG_CODE = "111";
-    private static final String SERVICE_NUMBER_TEMPLATE = "707-9000095-047202-%s/%s";
-    private static final String SERVICE_TYPE_CODE = "047202";
+    private static final String TO_ORG_CODE = "1111";
+    private static final String SERVICE_NUMBER_TEMPLATE = "0707-9000095-047201-%s/%s";
+    private static final String SERVICE_TYPE_CODE = "047201";
     private static final String DOCUMENT_TYPE_CODE = "77290";
 
     @Autowired
@@ -90,7 +90,7 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
 
     private GetRequestListInMessage createRequestIn() {
         GetRequestListInMessage requestListInMessage = new GetRequestListInMessage();
-        requestListInMessage.setServiceCode("047202");
+        requestListInMessage.setServiceCode(SERVICE_TYPE_CODE);
         requestListInMessage.setToDate(CommonUtils.getXmlGregorianCurrentDate());
         requestListInMessage.setFromDate(CommonUtils.getXmlGregorianCurrentDate());
         return requestListInMessage;
@@ -134,7 +134,7 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
 
         Department department = new Department();
         department.setName("Департамент информационных технологий города Москвы");
-        department.setCode("707");
+        department.setCode(FROM_ORG_CODE);
         department.setInn("7710878000");
         department.setOgrn("1107746943347");
         requestTask.setDepartment(department);
