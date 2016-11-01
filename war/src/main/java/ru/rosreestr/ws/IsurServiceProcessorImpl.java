@@ -51,7 +51,12 @@ public class IsurServiceProcessorImpl implements IsurServiceProcessor {
 
     private void sendAcknolegment(Headers serviceHeader) {
         try {
-            serviceClient.acknowledgement(creareErrorMessage(), serviceHeader);
+            Headers headers = new Headers();
+            headers.setFromOrgCode(serviceHeader.getFromOrgCode());
+            headers.setToOrgCode(serviceHeader.getToOrgCode());
+            headers.setServiceNumber(serviceHeader.getServiceNumber());
+            headers.setRelatesTo(serviceHeader.getRelatesTo());
+            serviceClient.acknowledgement(creareErrorMessage(), headers);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }
