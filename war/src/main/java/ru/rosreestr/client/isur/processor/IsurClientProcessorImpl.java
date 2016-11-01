@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import ru.rosreestr.client.isur.IService;
 import ru.rosreestr.client.isur.ServiceClient;
 import ru.rosreestr.client.isur.model.CoordinateTaskData;
+import ru.rosreestr.client.isur.model.ErrorMessage;
 import ru.rosreestr.client.isur.model.GetRequestListInMessage;
 import ru.rosreestr.client.isur.model.Headers;
 import ru.rosreestr.exception.DuplicateWebServiceException;
@@ -52,10 +53,7 @@ public class IsurClientProcessorImpl implements IsurClientProcessor {
     @Override
     public void sendTask(CoordinateTaskData taskMessage, Headers serviceHeader) throws NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException {
         LOG.info("start service sendTask");
-        WebServiceConfig wsdlParam = wsParamsService.findOneByServiceIdAndName(serviceId, WebServiceParam.WSDL);
-        URL url = new URL(wsdlParam.getStringValue());
-        ServiceClient serviceClient = new ServiceClient(url);
-        IService customBindingIService = serviceClient.getCustomBindingIService();
+        IService customBindingIService = getiService();
         customBindingIService.sendTask(taskMessage, serviceHeader);
         LOG.info("end service sendTask");
     }
@@ -63,14 +61,18 @@ public class IsurClientProcessorImpl implements IsurClientProcessor {
     @Override
     public void getRequestsList(GetRequestListInMessage requestListInMessage) throws NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException {
         LOG.info("start service getRequestsList");
-        WebServiceConfig wsdlParam = wsParamsService.findOneByServiceIdAndName(serviceId, WebServiceParam.WSDL);
-        URL url = new URL(wsdlParam.getStringValue());
-        ServiceClient serviceClient = new ServiceClient(url);
-        IService customBindingIService = serviceClient.getCustomBindingIService();
+        IService customBindingIService = getiService();
         customBindingIService.getRequestList(requestListInMessage);
         LOG.info("end service getRequestsList");
     }
 
+    @Override
+    public void acknowledgement(ErrorMessage parameters, Headers serviceHeader) throws NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException {
+        LOG.info("start service acknowledgement");
+        IService customBindingIService = getiService();
+        customBindingIService.acknowledgement(parameters, serviceHeader);
+        LOG.info("end service acknowledgement");
+    }
 
     @PostConstruct
     protected void init() throws NotFoundWebServiceException, DuplicateWebServiceException, NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException {
@@ -83,5 +85,12 @@ public class IsurClientProcessorImpl implements IsurClientProcessor {
     @Override
     public Integer getServiceId() {
         return serviceId;
+    }
+
+    private IService getiService() throws NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException {
+        WebServiceConfig wsdlParam = wsParamsService.findOneByServiceIdAndName(serviceId, WebServiceParam.WSDL);
+        URL url = new URL(wsdlParam.getStringValue());
+        ServiceClient serviceClient = new ServiceClient(url);
+        return serviceClient.getCustomBindingIService();
     }
 }

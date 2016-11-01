@@ -2,6 +2,7 @@ package ru.rosreestr.ws;
 
 import ru.rosreestr.client.isur.model.CoordinateStatusData;
 import ru.rosreestr.client.isur.model.ErrorMessage;
+import ru.rosreestr.client.isur.model.Headers;
 import ru.rosreestr.client.isur.model.ObjectFactory;
 
 import javax.jws.*;
@@ -30,7 +31,9 @@ public interface IsurService {
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void setFilesAndStatus(
             @WebParam(name = "StatusMessage", targetNamespace = "http://asguf.mos.ru/rkis_gu/coordinate/v5/", partName = "StatusMessage")
-            CoordinateStatusData statusMessage);
+            CoordinateStatusData statusMessage,
+            @WebParam(name = "ServiceHeader", targetNamespace = "http://asguf.mos.ru/rkis_gu/coordinate/v5/", header = true, partName = "ServiceHeader")
+            Headers serviceHeader);
 
 
     /**
@@ -42,5 +45,7 @@ public interface IsurService {
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void acknowledgement(
             @WebParam(name = "ErrorMessage", targetNamespace = "http://asguf.mos.ru/rkis_gu/coordinate/v5/", partName = "parameters")
-            ErrorMessage parameters);
+            ErrorMessage parameters,
+            @WebParam(name = "ServiceHeader", targetNamespace = "http://asguf.mos.ru/rkis_gu/coordinate/v5/", header = true, partName = "ServiceHeader")
+            Headers serviceHeader);
 }

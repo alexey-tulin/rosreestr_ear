@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.rosreestr.client.isur.model.CoordinateStatusData;
 import ru.rosreestr.client.isur.model.ErrorMessage;
+import ru.rosreestr.client.isur.model.Headers;
 
-import javax.jws.HandlerChain;
-import javax.jws.WebParam;
 import javax.jws.WebService;
 
 /**
@@ -24,13 +23,13 @@ public class IsurServiceImpl implements IsurService {
     @Qualifier("serviceWSProcessor")
     private IsurServiceProcessor processor;
 
-    public void setFilesAndStatus(@WebParam(name = "StatusMessage", targetNamespace = "http://asguf.mos.ru/rkis_gu/coordinate/v5/", partName = "StatusMessage")
-                                  CoordinateStatusData statusMessage) {
-        processor.setFilesAndStatus(statusMessage);
+    @Override
+    public void setFilesAndStatus(CoordinateStatusData statusMessage, Headers serviceHeader) {
+        processor.setFilesAndStatus(statusMessage, serviceHeader);
     }
 
-    public void acknowledgement(@WebParam(name = "ErrorMessage", targetNamespace = "http://asguf.mos.ru/rkis_gu/coordinate/v5/", partName = "parameters")
-                                ErrorMessage parameters) {
-        processor.acknowledgement(parameters);
+    @Override
+    public void acknowledgement(ErrorMessage parameters, Headers serviceHeader) {
+        processor.acknowledgement(parameters, serviceHeader);
     }
 }

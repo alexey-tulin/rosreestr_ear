@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.rosreestr.client.isur.model.CoordinateStatusData;
 import ru.rosreestr.client.isur.model.ErrorMessage;
+import ru.rosreestr.client.isur.model.ErrorMessageData;
+import ru.rosreestr.client.isur.model.Headers;
+import ru.rosreestr.client.isur.processor.IsurClientProcessor;
 import ru.rosreestr.exception.DuplicateWebServiceException;
 import ru.rosreestr.exception.DuplicateWebServiceParamException;
 import ru.rosreestr.exception.NotFoundWebServiceException;
@@ -30,6 +33,9 @@ public class IsurServiceProcessorImpl implements IsurServiceProcessor {
     @Autowired
     private WebServiceService wsService;
 
+    @Autowired
+    private IsurClientProcessor serviceClient;
+
     @PostConstruct
     protected void init() throws NotFoundWebServiceException, DuplicateWebServiceException, NotFoundWebServiceParamException, DuplicateWebServiceParamException, MalformedURLException {
 
@@ -39,12 +45,29 @@ public class IsurServiceProcessorImpl implements IsurServiceProcessor {
     }
 
     @Override
-    public void acknowledgement(ErrorMessage parameters) {
+    public void acknowledgement(ErrorMessage parameters, Headers serviceHeader) {
         LOG.info("ru.rosreestr.endpoints.ServiceWSProcessor.acknowledgement");
     }
 
+    private void sendAcknolegment(Headers serviceHeader) {
+        try {
+            serviceClient.acknowledgement(creareErrorMessage(), serviceHeader);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+    }
+
+    private ErrorMessage creareErrorMessage() {
+        ErrorMessage errorMessage = new ErrorMessage();
+        ErrorMessageData value = new ErrorMessageData();
+        value.setErrorCode("0");
+        errorMessage.setError(value);
+        return errorMessage;
+    }
+
     @Override
-    public void setFilesAndStatus(CoordinateStatusData statusMessage) {
+    public void setFilesAndStatus(CoordinateStatusData statusMessage, Headers serviceHeader) {
+        sendAcknolegment(serviceHeader);
         LOG.info("ru.rosreestr.endpoints.ServiceWSProcessor.setFilesAndStatus");
     }
 

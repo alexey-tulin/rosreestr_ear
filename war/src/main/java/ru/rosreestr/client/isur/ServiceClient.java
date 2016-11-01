@@ -8,7 +8,6 @@ import ru.rosreestr.handler.SignatureHandler;
 import javax.xml.namespace.QName;
 import javax.xml.ws.*;
 import javax.xml.ws.handler.Handler;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
