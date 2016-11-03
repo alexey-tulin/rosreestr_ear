@@ -3,6 +3,9 @@ package ru.rosreestr.utils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -39,12 +42,16 @@ public class CommonUtils {
     }
 
     public static byte[] encodeObjectToBase64(Object object) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        JAXBContext jaxbContext;
         try {
-            new ObjectOutputStream(baos).writeObject(object);
-        } catch (IOException e) {
+            jaxbContext = JAXBContext.newInstance(object.getClass());
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            jaxbMarshaller.marshal(object, baos);
+            return Base64.encodeBase64(baos.toByteArray());
+        } catch (JAXBException e) {
             LOG.error(e.getMessage(), e);
         }
-        return Base64.encodeBase64(baos.toByteArray());
+        return null;
     }
 }
