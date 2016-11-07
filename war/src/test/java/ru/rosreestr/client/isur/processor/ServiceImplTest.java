@@ -135,7 +135,7 @@ public class ServiceImplTest {
         serviceProperties.setTypeobject("002001002000");
         serviceProperties.setTyperoom("IsNondomestic");
 
-        byte[] base64Props = CommonUtils.encodeObjectToBase64(serviceProperties);
+        byte[] base64Props = CommonUtils.marshalObjectToByte(serviceProperties);
         ru.rosreestr.client.isur.model.base64.ServiceProperties servicePropertiesBase64 = new ru.rosreestr.client.isur.model.base64.ServiceProperties();
         servicePropertiesBase64.setData(base64Props);
         servicePropertiesBase64.setSignature(createSignature(base64Props));

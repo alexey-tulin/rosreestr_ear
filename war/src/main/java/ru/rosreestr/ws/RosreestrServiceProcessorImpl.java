@@ -235,6 +235,7 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
         requiredDataRealty.setExtractRealty(extractRealty);
         requiredData.setRequiredDataRealty(requiredDataRealty);
         internalReq.setRequiredData(requiredData);
+        requestGRP.setRequest(internalReq);
         DocumentsRequestData.Parameter parameter = createParameter(requestGRP);
         return parameter;
     }
@@ -293,7 +294,7 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
 
     private DocumentsRequestData.Parameter createParameter(Object data) {
         DocumentsRequestData.Parameter parameter = new DocumentsRequestData.Parameter();
-        byte[] base64Props = CommonUtils.encodeObjectToBase64(data);
+        byte[] base64Props = CommonUtils.marshalObjectToByte(data);
         ru.rosreestr.client.isur.model.base64.ServiceProperties servicePropertiesBase64 = new ru.rosreestr.client.isur.model.base64.ServiceProperties();
         servicePropertiesBase64.setData(base64Props);
         servicePropertiesBase64.setSignature(createSignature(base64Props));

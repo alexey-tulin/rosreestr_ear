@@ -8,11 +8,7 @@
 
 package ru.rosreestr.client.isur.model.base64;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-import java.lang.*;
+import javax.xml.bind.annotation.*;
 
 
 /**
@@ -93,7 +89,7 @@ import java.lang.*;
 public class Objects {
 
     @XmlElement(name = "Object", required = true)
-    protected java.lang.Object object;
+    protected Object object;
 
     /**
      * Gets the value of the object property.
@@ -103,7 +99,7 @@ public class Objects {
      *     {@link java.lang.Object }
      *     
      */
-    public java.lang.Object getObject() {
+    public Object getObject() {
         return object;
     }
 
@@ -115,7 +111,7 @@ public class Objects {
      *     {@link java.lang.Object }
      *     
      */
-    public void setObject(java.lang.Object value) {
+    public void setObject(Object value) {
         this.object = value;
     }
 

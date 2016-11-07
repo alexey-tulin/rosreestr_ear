@@ -41,17 +41,16 @@ public class CommonUtils {
         return date;
     }
 
-    public static byte[] encodeObjectToBase64(Object object) {
+    public static byte[] marshalObjectToByte(Object object) {
         JAXBContext jaxbContext;
         try {
             jaxbContext = JAXBContext.newInstance(object.getClass());
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             jaxbMarshaller.marshal(object, baos);
-            LOG.info("!!!stringData" + new String(baos.toByteArray()));
-            byte[] encodedData = Base64.encodeBase64(baos.toByteArray());
-            LOG.info("!!!encodedData" + new String(encodedData));
-            return encodedData;
+            LOG.info("!!!stringData " + new String(baos.toByteArray()));
+            byte[] encodedData = baos.toByteArray();
+             return encodedData;
         } catch (JAXBException e) {
             LOG.error(e.getMessage(), e);
         }
