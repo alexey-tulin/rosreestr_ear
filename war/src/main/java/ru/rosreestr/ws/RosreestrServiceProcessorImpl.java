@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.rosreestr.client.isur.model.*;
+import ru.rosreestr.client.isur.model.ServiceProperties;
+import ru.rosreestr.client.isur.model.base64.*;
 import ru.rosreestr.client.isur.processor.IsurClientProcessor;
 import ru.rosreestr.exception.DuplicateWebServiceException;
 import ru.rosreestr.exception.DuplicateWebServiceParamException;
 import ru.rosreestr.exception.NotFoundWebServiceException;
 import ru.rosreestr.exception.NotFoundWebServiceParamException;
-import ru.rosreestr.handler.LoggerHandler;
-import ru.rosreestr.handler.SignatureHandler;
 import ru.rosreestr.persistence.model.*;
 import ru.rosreestr.persistence.repository.CommonRepositoryImpl;
 import ru.rosreestr.service.LoggerDbService;
@@ -24,6 +24,7 @@ import ru.rosreestr.ws.model.GetInformationRequest;
 import ru.rosreestr.ws.model.GetInformationResponse;
 
 import javax.annotation.PostConstruct;
+import java.lang.Object;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.text.DecimalFormat;
@@ -80,7 +81,7 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
         String serviceNumber = String.format(SERVICE_NUMBER_TEMPLATE,
                 df.format(nextMessageNum), CommonUtils.getCurrentYear());
 
-        serviceClient.sendTask(createTaskMessage(request, serviceNumber), createHeaders(serviceNumber));
+        serviceClient.sendTask(createTaskMessage(request, serviceNumber, nextMessageNum), createHeaders(serviceNumber));
         GetInformationResponse sendRequestResponse = new GetInformationResponse();
         sendRequestResponse.setServiceNumber(serviceNumber);
 
@@ -106,10 +107,10 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
         return headers;
     }
 
-    private CoordinateTaskData createTaskMessage(GetInformationRequest request, String serviceNumber) {
+    private CoordinateTaskData createTaskMessage(GetInformationRequest request, String serviceNumber, BigDecimal nextMessageNum) {
         CoordinateTaskData coordinateTaskData = new CoordinateTaskData();
         RequestTask requestTask = createRequestTask(serviceNumber);
-        DocumentsRequestData documentsRequestData = createDocumentsRequestData(request);
+        DocumentsRequestData documentsRequestData = createDocumentsRequestData(request, nextMessageNum);
 
         coordinateTaskData.setTask(requestTask);
         coordinateTaskData.setData(documentsRequestData);
@@ -142,19 +143,108 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
         return requestTask;
     }
 
-    private DocumentsRequestData createDocumentsRequestData(GetInformationRequest request) {
+    private DocumentsRequestData createDocumentsRequestData(GetInformationRequest request, BigDecimal nextMessageNum) {
         DocumentsRequestData documentsRequestData = new DocumentsRequestData();
         documentsRequestData.setDocumentTypeCode(DOCUMENT_TYPE_CODE);
         documentsRequestData.setIncludeXmlView(true);
         documentsRequestData.setIncludeBinaryView(true);
         documentsRequestData.setParameterTypeCode(DOCUMENT_TYPE_CODE);
-        DocumentsRequestData.Parameter parameter = createParameter(request);
+        DocumentsRequestData.Parameter parameter = createRequestGRPParameter(request, nextMessageNum);
         documentsRequestData.setParameter(parameter);
         return documentsRequestData;
     }
 
-    private DocumentsRequestData.Parameter createParameter(GetInformationRequest request) {
-        DocumentsRequestData.Parameter parameter = new DocumentsRequestData.Parameter();
+    /**
+     * Creates {@link ru.rosreestr.client.isur.model.base64.RequestGRP} data
+     * @param request
+     * @param nextMessageNum
+     * @return
+     */
+    private DocumentsRequestData.Parameter createRequestGRPParameter(GetInformationRequest request, BigDecimal nextMessageNum) {
+        RequestGRP requestGRP = new RequestGRP();
+        EDocument eDocument = new EDocument();
+        eDocument.setGUID(UUID.randomUUID().toString());
+        eDocument.setVersion(1.16);
+        requestGRP.setEDocument(eDocument);
+
+        FIRInfo firInfo = new FIRInfo();
+        firInfo.setMonitoring(0);
+        requestGRP.setFIRInfo(firInfo);
+
+        Request internalReq = new Request();
+        Payment payment = new Payment();
+        payment.setFree("true");
+        internalReq.setPayment(payment);
+
+        Delivery delivery = new Delivery();
+        delivery.setWebService("true");
+        internalReq.setDelivery(delivery);
+
+        AppliedDocuments appliedDocuments = new AppliedDocuments();
+        AppliedDocument appliedDocument = new AppliedDocument();
+        appliedDocument.setName("Запрос о предоставлении сведений, содержащихся в Едином государственном реестре прав на недвижимое имущество и сделок с ним");
+        appliedDocument.setNumber(nextMessageNum.intValue());
+        appliedDocument.setCodeDocument("558102100000");
+        appliedDocument.setDate(CommonUtils.getXmlGregorianCurrentDate());
+        Quantity quantity = new Quantity();
+        Original original = new Original();
+        original.setQuantity(1);
+        original.setQuantitySheet(1);
+        quantity.setOriginal(original);
+        appliedDocument.setQuantity(quantity);
+        appliedDocuments.setAppliedDocument(appliedDocument);
+        internalReq.setAppliedDocuments(appliedDocuments);
+
+        Declarant declarant = new Declarant();
+        declarant.setDeclarantKind("357013000000");
+        declarant.setSignatured("true");
+
+        Governance governance = new Governance();
+        governance.setName("Департамент информационных технологий города Москвы");
+        governance.setGovernanceCode("007001001002");
+        governance.setEMail("test@test.test");
+        Agent agent = new Agent();
+        agent.setEMail("test@test.test");
+        agent.setAgentKind("356005000000");
+        FIO fio = new FIO();
+        fio.setFirst("Петр");
+        fio.setPatronymic("Аркадьевич");
+        fio.setSurname("Столыпин");
+        agent.setFIO(fio);
+        Document document = new Document();
+        document.setCodeDocument("008001002000");
+        document.setNumber("999999");
+        document.setSeries("9999");
+        document.setDate(CommonUtils.getXmlGregorianCurrentDate());
+        document.setIssueOrgan("ОВД ГОР.МОСКВЫ");
+        agent.setDocument(document);
+        governance.setAgent(agent);
+        declarant.setGovernance(governance);
+        internalReq.setDeclarant(declarant);
+
+        RequiredData requiredData = new RequiredData();
+        RequiredDataRealty requiredDataRealty = new RequiredDataRealty();
+        ExtractRealty extractRealty = new ExtractRealty();
+        Objects objects = new Objects();
+        ru.rosreestr.client.isur.model.base64.Object object = new ru.rosreestr.client.isur.model.base64.Object();
+        CadastralNumbers cadastralNumbers = new CadastralNumbers();
+        cadastralNumbers.setCadastralNumber(request.getCadastralnumber());
+        object.setCadastralNumbers(cadastralNumbers);
+        objects.setObject(object);
+        extractRealty.setObjects(objects);
+        requiredDataRealty.setExtractRealty(extractRealty);
+        requiredData.setRequiredDataRealty(requiredDataRealty);
+        internalReq.setRequiredData(requiredData);
+        DocumentsRequestData.Parameter parameter = createParameter(requestGRP);
+        return parameter;
+    }
+
+    /**
+     * Creates {@link ServiceProperties} data
+     * @param request
+     * @return
+     */
+    private DocumentsRequestData.Parameter createServicePropertiesParameter(GetInformationRequest request) {
         ServiceProperties serviceProperties = new ServiceProperties();
         serviceProperties.setRegion(request.getRegion());
         serviceProperties.setCadastralnumber(request.getCadastralnumber());
@@ -196,12 +286,18 @@ public class RosreestrServiceProcessorImpl implements RosreestrServiceProcessor 
         serviceProperties.setEnableSubscription(request.getEnableSubscription());
         serviceProperties.setKindName(request.getKindName());
 
-        byte[] base64Props = CommonUtils.encodeObjectToBase64(serviceProperties);
+        DocumentsRequestData.Parameter parameter = createParameter(serviceProperties);
+
+        return parameter;
+    }
+
+    private DocumentsRequestData.Parameter createParameter(Object data) {
+        DocumentsRequestData.Parameter parameter = new DocumentsRequestData.Parameter();
+        byte[] base64Props = CommonUtils.encodeObjectToBase64(data);
         ru.rosreestr.client.isur.model.base64.ServiceProperties servicePropertiesBase64 = new ru.rosreestr.client.isur.model.base64.ServiceProperties();
         servicePropertiesBase64.setData(base64Props);
         servicePropertiesBase64.setSignature(createSignature(base64Props));
         parameter.setAny(servicePropertiesBase64);
-
         return parameter;
     }
 

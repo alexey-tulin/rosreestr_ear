@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+         <xs:element name="RequestGRP">
+               <xs:complexType>
+                     <xs:sequence>
+                           <xs:element name="eDocument">
+                                 <xs:complexType>
+                                       <xs:attribute name="GUID" type="xs:string"></xs:attribute>
+                                       <xs:attribute name="Version" type="xs:double"></xs:attribute>
+                                 </xs:complexType>
+                           </xs:element>
+                           <xs:element name="Request">
+                                 <xs:complexType>
+                                       <xs:sequence>
+                                             <xs:element name="RequiredData">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="RequiredDataRealty">
+                                                                     <xs:complexType>
+                                                                           <xs:sequence>
+                                                                                 <xs:element name="ExtractRealty">
+                                                                                       <xs:complexType>
+                                                                                             <xs:sequence>
+                                                                                                   <xs:element name="Objects">
+                                                                                                         <xs:complexType>
+                                                                                                               <xs:sequence>
+                                                                                                                     <xs:element name="Object">
+                                                                                                                           <xs:complexType>
+                                                                                                                                 <xs:sequence>
+                                                                                                                                       <xs:element name="ObjKind">
+                                                                                                                                             <xs:complexType>
+                                                                                                                                                   <xs:sequence>
+                                                                                                                                                         <xs:element name="Building">
+                                                                                                                                                               <xs:complexType>
+                                                                                                                                                                     <xs:sequence>
+                                                                                                                                                                           <xs:element name="IsNondomestic" type="xs:string"></xs:element>
+                                                                                                                                                                     </xs:sequence>
+                                                                                                                                                               </xs:complexType>
+                                                                                                                                                         </xs:element>
+                                                                                                                                                   </xs:sequence>
+                                                                                                                                             </xs:complexType>
+                                                                                                                                       </xs:element>
+                                                                                                                                       <xs:element name="CadastralNumbers">
+                                                                                                                                             <xs:complexType>
+                                                                                                                                                   <xs:sequence>
+                                                                                                                                                         <xs:element name="CadastralNumber" type="xs:string"></xs:element>
+                                                                                                                                                   </xs:sequence>
+                                                                                                                                             </xs:complexType>
+                                                                                                                                       </xs:element>
+                                                                                                                                       <xs:element name="Location">
+                                                                                                                                             <xs:complexType>
+                                                                                                                                                   <xs:sequence>
+                                                                                                                                                         <xs:element name="Region" type="xs:int"></xs:element>
+                                                                                                                                                   </xs:sequence>
+                                                                                                                                             </xs:complexType>
+                                                                                                                                       </xs:element>
+                                                                                                                                 </xs:sequence>
+                                                                                                                           </xs:complexType>
+                                                                                                                     </xs:element>
+                                                                                                               </xs:sequence>
+                                                                                                         </xs:complexType>
+                                                                                                   </xs:element>
+                                                                                             </xs:sequence>
+                                                                                       </xs:complexType>
+                                                                                 </xs:element>
+                                                                           </xs:sequence>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="Declarant">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="Governance">
+                                                                     <xs:complexType>
+                                                                           <xs:sequence>
+                                                                                 <xs:element name="Name" type="xs:string"></xs:element>
+                                                                                 <xs:element name="Governance_Code" type="xs:int"></xs:element>
+                                                                                 <xs:element name="E-mail" type="xs:string"></xs:element>
+                                                                                 <xs:element name="Agent">
+                                                                                       <xs:complexType>
+                                                                                             <xs:sequence>
+                                                                                                   <xs:element name="FIO">
+                                                                                                         <xs:complexType>
+                                                                                                               <xs:sequence>
+                                                                                                                     <xs:element name="Surname" type="xs:string"></xs:element>
+                                                                                                                     <xs:element name="First" type="xs:string"></xs:element>
+                                                                                                                     <xs:element name="Patronymic" type="xs:string"></xs:element>
+                                                                                                               </xs:sequence>
+                                                                                                         </xs:complexType>
+                                                                                                   </xs:element>
+                                                                                                   <xs:element name="Document">
+                                                                                                         <xs:complexType>
+                                                                                                               <xs:sequence>
+                                                                                                                     <xs:element name="Code_Document" type="xs:int"></xs:element>
+                                                                                                                     <xs:element name="Series" type="xs:int"></xs:element>
+                                                                                                                     <xs:element name="Number" type="xs:int"></xs:element>
+                                                                                                                     <xs:element name="Date" type="xs:date"></xs:element>
+                                                                                                                     <xs:element name="IssueOrgan" type="xs:string"></xs:element>
+                                                                                                               </xs:sequence>
+                                                                                                         </xs:complexType>
+                                                                                                   </xs:element>
+                                                                                                   <xs:element name="E-mail" type="xs:string"></xs:element>
+                                                                                                   <xs:element name="agent_kind" type="xs:int"></xs:element>
+                                                                                             </xs:sequence>
+                                                                                       </xs:complexType>
+                                                                                 </xs:element>
+                                                                           </xs:sequence>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                         <xs:attribute name="declarant_kind" type="xs:int"></xs:attribute>
+                                                         <xs:attribute name="signatured" type="xs:string"></xs:attribute>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="Payment">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="Free" type="xs:string"></xs:element>
+                                                         </xs:sequence>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="Delivery">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="WebService" type="xs:string"></xs:element>
+                                                         </xs:sequence>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="Applied_Documents">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="Applied_Document">
+                                                                     <xs:complexType>
+                                                                           <xs:sequence>
+                                                                                 <xs:element name="Code_Document" type="xs:int"></xs:element>
+                                                                                 <xs:element name="Name" type="xs:string"></xs:element>
+                                                                                 <xs:element name="Number" type="xs:int"></xs:element>
+                                                                                 <xs:element name="Date" type="xs:date"></xs:element>
+                                                                                 <xs:element name="Quantity">
+                                                                                       <xs:complexType>
+                                                                                             <xs:sequence>
+                                                                                                   <xs:element name="Original">
+                                                                                                         <xs:complexType>
+                                                                                                               <xs:attribute name="Quantity" type="xs:int"></xs:attribute>
+                                                                                                               <xs:attribute name="Quantity_Sheet" type="xs:int"></xs:attribute>
+                                                                                                         </xs:complexType>
+                                                                                                   </xs:element>
+                                                                                             </xs:sequence>
+                                                                                       </xs:complexType>
+                                                                                 </xs:element>
+                                                                           </xs:sequence>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                       </xs:sequence>
+                                 </xs:complexType>
+                           </xs:element>
+                           <xs:element name="FIR_Info">
+                                 <xs:complexType>
+                                       <xs:sequence>
+                                             <xs:element name="Monitoring" type="xs:int"></xs:element>
+                                       </xs:sequence>
+                                 </xs:complexType>
+                           </xs:element>
+                     </xs:sequence>
+               </xs:complexType>
+         </xs:element>
+   </xs:schema>
