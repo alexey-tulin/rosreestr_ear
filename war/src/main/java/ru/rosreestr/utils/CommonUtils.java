@@ -48,7 +48,7 @@ public class CommonUtils {
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             jaxbMarshaller.marshal(object, baos);
-            byte[] encodedData = Base64.encodeBase64(baos.toByteArray());
+            byte[] encodedData=baos.toByteArray();
             LOG.info("!!!" + new String(encodedData));
             return encodedData;
         } catch (JAXBException e) {
