@@ -55,7 +55,8 @@ public class IsurServiceProcessorImpl implements IsurServiceProcessor {
             headers.setFromOrgCode(serviceHeader.getFromOrgCode());
             headers.setToOrgCode(serviceHeader.getToOrgCode());
             headers.setServiceNumber(serviceHeader.getServiceNumber());
-            headers.setRelatesTo(serviceHeader.getRelatesTo());
+            headers.setRelatesTo(serviceHeader.getMessageId());
+            headers.setMessageId(java.util.UUID.randomUUID().toString());
             serviceClient.acknowledgement(creareErrorMessage(), headers);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
@@ -72,6 +73,9 @@ public class IsurServiceProcessorImpl implements IsurServiceProcessor {
 
     @Override
     public void setFilesAndStatus(CoordinateStatusData statusMessage, Headers serviceHeader) {
+        LOG.info("111"+serviceHeader.getId());
+        LOG.info("222"+serviceHeader.getMessageId());
+
         sendAcknolegment(serviceHeader);
         LOG.info("ru.rosreestr.endpoints.ServiceWSProcessor.setFilesAndStatus");
     }
