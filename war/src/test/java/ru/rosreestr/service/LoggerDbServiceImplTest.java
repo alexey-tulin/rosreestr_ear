@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import java.util.Date;
 
 /**
- * Created by KatrinaBosh on 08.10.2016.
+ * Тестовый класс для вызова процедур логирования
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {AppConfig.class, PersistentConfig.class})

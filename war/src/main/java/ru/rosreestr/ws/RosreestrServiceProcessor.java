@@ -8,7 +8,7 @@ import ru.rosreestr.ws.model.GetInformationResponse;
 import java.net.MalformedURLException;
 
 /**
- * Created by KatrinaBosh on 13.10.2016.
+ *
  */
 public interface RosreestrServiceProcessor {
 

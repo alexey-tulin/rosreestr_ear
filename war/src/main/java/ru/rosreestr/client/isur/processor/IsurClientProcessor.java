@@ -10,7 +10,7 @@ import ru.rosreestr.exception.NotFoundWebServiceParamException;
 import java.net.MalformedURLException;
 
 /**
- * Created by KatrinaBosh on 13.10.2016.
+ *
  */
 public interface IsurClientProcessor {
 

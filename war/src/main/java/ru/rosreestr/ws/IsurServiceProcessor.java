@@ -4,7 +4,7 @@ import ru.rosreestr.client.isur.model.CoordinateStatusData;
 import ru.rosreestr.client.isur.model.ErrorMessage;
 import ru.rosreestr.client.isur.model.Headers;
 /**
- * Created by KatrinaBosh on 13.10.2016.
+ *
  */
 public interface IsurServiceProcessor {
 

@@ -8,7 +8,7 @@ import javax.persistence.Query;
 import java.util.Date;
 
 /**
- * Created by KatrinaBosh on 08.10.2016.
+ * Реализация репозитория, который используется для вызова процедур логирования
  */
 @Repository
 public class LoggerDbRepositoryImpl implements LoggerDbRepository {

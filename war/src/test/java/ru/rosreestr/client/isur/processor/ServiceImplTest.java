@@ -54,7 +54,7 @@ public class ServiceImplTest {
     private char[] password;
 
     @Before
-    protected void init() throws NotFoundWebServiceException, DuplicateWebServiceException, NotFoundWebServiceParamException, DuplicateWebServiceParamException, WebServiceParamTypeException {
+    public void init() throws NotFoundWebServiceException, DuplicateWebServiceException, NotFoundWebServiceParamException, DuplicateWebServiceParamException, WebServiceParamTypeException {
         WebServiceCode targetServiceCode = WebServiceCode.ISUR;
         List<WebService> webServices = wsService.findByParam(WebServiceParam.CODE, targetServiceCode.name());
 

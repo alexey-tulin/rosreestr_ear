@@ -4,7 +4,7 @@ import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 /**
- * Created by KatrinaBosh on 28.09.2016.
+ * Основной конфиг приложения
  */
 @Configuration
 @ComponentScan("ru.rosreestr")
